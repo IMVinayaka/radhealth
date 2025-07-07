@@ -1,6 +1,6 @@
-# Artemedix - Healthcare Staffing Website
+# RadHealth+ - Healthcare Staffing Website
 
-A modern, responsive website for Artemedix, built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion.
+A modern, responsive website for RadHealth+, built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion.
 
 ## Features
 
@@ -34,8 +34,8 @@ A modern, responsive website for Artemedix, built with Next.js 14, TypeScript, T
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/artemedix-website.git
-   cd artemedix-website
+   git clone https://github.com/your-username/RadHealth+-website.git
+   cd RadHealth+-website
    ```
 
 2. Install dependencies:
@@ -57,7 +57,7 @@ A modern, responsive website for Artemedix, built with Next.js 14, TypeScript, T
 ## Project Structure
 
 ```
-artemedix-website/
+RadHealth+-website/
 ├── app/                    # App router
 │   ├── components/         # Reusable components
 │   ├── utils/              # Utility functions
@@ -140,4 +140,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by Loesh B S
+Made with ❤️ by RadHealth+
