@@ -57,7 +57,7 @@ export default function WhyChooseUs() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={slideIn}
+              variants={fadeUp}
               custom={index * 0.1}
               className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow"
             >
