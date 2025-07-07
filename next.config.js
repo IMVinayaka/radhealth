@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
   output: 'export',
-  basePath: process.env.NODE_ENV === 'production' ? '/your-repo-name' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/your-repo-name/' : '',
+  basePath: isProd ? '/video-landing--1-' : '',
+  assetPrefix: isProd ? '/video-landing--1-/' : '',
   reactStrictMode: true,
   images: {
     unoptimized: true,
