@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
+const repoName = 'readHealth';
 
 const nextConfig = {
   output: 'export',
-  basePath: isProd ? '/video-landing--1-' : '',
-  assetPrefix: isProd ? '/video-landing--1-/' : '',
+  basePath: isProd ? `/${repoName}` : '',
+  assetPrefix: isProd ? `/${repoName}/` : '',
   reactStrictMode: true,
   images: {
     unoptimized: true,

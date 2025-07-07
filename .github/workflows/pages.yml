@@ -2,17 +2,15 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]  # Change to your default branch if different
+    branches: [main]
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
   deployments: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -47,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './out'
+          path: './out/.'  # Note the './out/.' to include all contents
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // Get the correct path with the repository name
+      const repoName = 'video-landing--1-';
+      const basePath = '/' + repoName;
+      
+      // Redirect to the base path
+      window.location.href = basePath + window.location.pathname + window.location.search + window.location.hash;
+    </script>
+    <meta http-equiv="refresh" content="0; URL='<%= process.env.BASE_PATH %>'" />
+  </head>
+  <body>
+    <p>If you are not redirected, <a href="<%= process.env.BASE_PATH %>">click here</a>.</p>
+  </body>
+</html>
