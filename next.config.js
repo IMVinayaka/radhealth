@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
-const repoName = 'video-landing--1-';
+const repoName = 'radhealth';
 const basePath = isProd ? `/${repoName}` : '';
 
 const nextConfig = {
@@ -27,6 +27,26 @@ const nextConfig = {
   },
   trailingSlash: true,
   distDir: 'out',
+  // Disable font optimization as we're using static export
+  optimizeFonts: false,
+  // Ensure static assets are served from the correct path
+  experimental: {
+    optimizeCss: true,
+  },
+  // Add headers for font files
+  async headers() {
+    return [
+      {
+        source: '/(.*).woff2',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig
