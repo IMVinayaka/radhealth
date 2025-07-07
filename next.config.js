@@ -27,8 +27,12 @@ const nextConfig = {
   },
   // Ensure static export works with next/link
   trailingSlash: true,
-  // Enable static HTML export
+  // Output directory for the static export
   distDir: 'out',
+  // Disable image optimization API since we're using unoptimized images
+  images: {
+    unoptimized: true,
+  },
 }
 
 module.exports = nextConfig
