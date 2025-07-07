@@ -27,17 +27,33 @@ const nextConfig = {
   },
   trailingSlash: true,
   distDir: 'out',
-  // Disable font optimization as we're using static export
   optimizeFonts: false,
-  // Ensure static assets are served from the correct path
   experimental: {
-    optimizeCss: true,
+    // Disable optimizeCss as it's causing issues with critters
+    // optimizeCss: true,
   },
-  // Add headers for font files
-  async headers() {
+  // Disable headers for static export
+  // headers: async () => {
+  //   return [
+  //     {
+  //       source: '/(.*).woff2',
+  //       headers: [
+  //         {
+  //           key: 'Cache-Control',
+  //           value: 'public, max-age=31536000, immutable',
+  //         },
+  //       ],
+  //     },
+  //   ];
+  // },
+};
+
+// Only add headers in development
+if (process.env.NODE_ENV === 'development') {
+  nextConfig.headers = async () => {
     return [
       {
-        source: '/(.*).woff2',
+        source: '/:all*(woff|woff2|eot|ttf|otf)',
         headers: [
           {
             key: 'Cache-Control',
@@ -46,7 +62,7 @@ const nextConfig = {
         ],
       },
     ];
-  },
+  };
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
