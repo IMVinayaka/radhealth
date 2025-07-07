@@ -7,11 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write .",
-    "check-types": "tsc --noEmit",
     "export": "next build && next export -o out",
-    "deploy": "gh-pages -d out",
-    "predeploy": "npm run build && npm run export"
+    "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
     "framer-motion": "^10.16.4",
