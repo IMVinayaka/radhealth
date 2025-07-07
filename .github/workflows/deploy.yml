@@ -1,0 +1,89 @@
+name: Deploy to Production Server
+
+on:
+  push:
+    branches: [ prod ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: |
+        npm run build
+        cp -r public .next/standalone/
+      env:
+        # Add your build environment variables here
+        NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add Server to Known Hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+
+    - name: Deploy to Server
+      run: |
+        # Create necessary directories
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          "mkdir -p ${{ secrets.REMOTE_DIR }}/.next/standalone"
+        
+        # Sync build files
+        rsync -avz --delete \
+          --exclude '.git' \
+          --exclude 'node_modules' \
+          --exclude '.next/cache' \
+          .next/standalone/ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_DIR }}/.next/standalone/
+        
+        # Sync public folder
+        rsync -avz --delete \
+          public/ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_DIR }}/public/
+        
+        # Sync .next/static
+        rsync -avz --delete \
+          .next/static/ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.REMOTE_DIR }}/.next/static/
+        
+        # Restart the application (example using PM2)
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          "cd ${{ secrets.REMOTE_DIR }} && \
+           pm2 delete ${{ secrets.PM2_APP_NAME }} || true && \
+           NODE_ENV=production \
+           PORT=${{ secrets.APP_PORT || 3000 }} \
+           pm2 start .next/standalone/server.js --name \"${{ secrets.PM2_APP_NAME || 'next-app' }}\" \
+           --update-env"
+
+    - name: Verify Deployment
+      run: |
+        # Verify the application is running
+        curl -I http://${{ secrets.SSH_HOST }}:${{ secrets.APP_PORT || 3000 }}
+
+    - name: Post on Slack (optional)
+      if: success()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_COLOR: '#36a64f'
+        SLACK_TITLE: 'Deployment Successful 🚀'
+        SLACK_MESSAGE: 'Successfully deployed to production server!'
+        MSG_MINIMAL: true
