@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
 
@@ -61,37 +62,125 @@ const alliedHealthRoles = [
   { icon: ultrasoundTechIcon, title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
 ];
 
-export default function ServicesPage() {
+export default function AboutUsPage() {
+  // Parallax effects
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ['start start', 'end start']
+  });
+
+  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
   return (
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Banner */}
-      <section className="relative h-[70vh] md:h-screen flex items-center justify-center overflow-hidden">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark">
+      {/* Hero Section with Parallax */}
+      <section 
+        ref={targetRef}
+        className="relative h-screen flex items-center justify-center overflow-hidden"
+      >
+        {/* Animated Background */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"
+          style={{ 
+            scale,
+            y: yBg,
+            opacity,
+          }}
+        >
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        </div>
+          
+          {/* Floating Elements */}
+          <motion.div 
+            className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm"
+            animate={{
+              y: [0, -20, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div 
+            className="absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm"
+            animate={{
+              y: [0, 30, 0],
+              x: [0, -20, 0],
+              scale: [1, 0.9, 1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
+        </motion.div>
 
         {/* Content */}
-        <div className="relative z-10 text-center px-4">
-          <motion.h1 
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            className="text-center max-w-4xl mx-auto"
+            style={{ y: yText }}
           >
-            Healthcare Professional Services
-          </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl text-primary-extraLight max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Connecting healthcare professionals with rewarding career opportunities
-          </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.span 
+                className="inline-block text-primary-extraLight text-lg md:text-xl mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                Who We Are
+              </motion.span>
+              <motion.h1 
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                About <span className="text-primary-extraLight">Radiant Health Staffing</span>
+              </motion.h1>
+              <motion.p 
+                className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Connecting healthcare professionals with rewarding career opportunities
+              </motion.p>
+            </motion.div>
+          </motion.div>
         </div>
+
+        {/* Animated Scroll Indicator */}
+        <motion.div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5 }}
+        >
+          <span className="text-white text-sm mb-2">Scroll Down</span>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Intro Section */}
