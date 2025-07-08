@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navigation from '../components/Navigation';
 import JobApplicationModal from '../components/jobApplicationModal';
 
 // Mock data - replace with your API data
@@ -95,7 +94,6 @@ export default function CareersPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       
 
 

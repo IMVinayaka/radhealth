@@ -101,7 +101,6 @@ export default function ClientsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navigation />
       <AutoScrollSections sectionIds={sectionIds} delay={5000} scrollOffset={80} />
       
       <section id="clients-hero" className="relative h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-4 sm:px-6 lg:px-8" ref={targetRef}>

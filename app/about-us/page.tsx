@@ -80,7 +80,7 @@ export default function AboutUsPage() {
 
   return (
     <div className="min-h-screen">
-      <Navigation />
+    
       <AutoScrollSections sectionIds={sectionIds} delay={8000} scrollOffset={80} />
       
       {/* Hero Section with Parallax */}
