@@ -41,35 +41,30 @@ export default function ServicesPage() {
       <Navigation />
       
       {/* Hero Banner */}
-      <section className="relative bg-primary text-white">
-        <div className="absolute inset-0 opacity-20">
-          <Image 
-            src="/images/radhealth_bg.png" 
-            alt="Healthcare Professionals"
-            fill
-            className="object-cover"
-            priority
-          />
+      <section className="relative h-[70vh] md:h-screen flex items-center justify-center overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         </div>
-        <div className="relative z-10 py-24 md:py-32 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              Healthcare Professional Services
-            </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl text-primary-extraLight max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Connecting healthcare professionals with rewarding career opportunities
-            </motion.p>
-          </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4">
+          <motion.h1 
+            className="text-5xl md:text-7xl font-bold text-white mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Healthcare Professional Services
+          </motion.h1>
+          <motion.p 
+            className="text-xl md:text-2xl text-primary-extraLight max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            Connecting healthcare professionals with rewarding career opportunities
+          </motion.p>
         </div>
       </section>
 
