@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
+import AutoScrollSections from '../components/AutoScrollSections';
 
 // Import all icons
 import cathLabIcon from '../assets/images/rad_health_icons/cath_lab.svg';
@@ -62,6 +63,8 @@ const alliedHealthRoles = [
   { icon: ultrasoundTechIcon, title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
 ];
 
+const sectionIds = ['about-mission'];
+
 export default function AboutUsPage() {
   // Parallax effects
   const targetRef = useRef<HTMLDivElement>(null);
@@ -78,9 +81,11 @@ export default function AboutUsPage() {
   return (
     <div className="min-h-screen">
       <Navigation />
+      <AutoScrollSections sectionIds={sectionIds} delay={8000} scrollOffset={80} />
       
       {/* Hero Section with Parallax */}
       <section 
+        id="about-hero"
         ref={targetRef}
         className="relative h-screen flex items-center justify-center overflow-hidden"
       >
@@ -184,7 +189,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-12 md:py-20 px-4">
+      <section id="about-mission" className="py-12 md:py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -233,7 +238,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Nursing Opportunities */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section id="about-team" className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <motion.div 
             className="text-center max-w-3xl mx-auto mb-12"
@@ -296,7 +301,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Allied Health Section */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section id="about-values" className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <motion.div 
             className="text-center max-w-3xl mx-auto mb-12"

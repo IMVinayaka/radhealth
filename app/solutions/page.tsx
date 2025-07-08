@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
+import AutoScrollSections from '../components/AutoScrollSections';
 import { FaCheck } from 'react-icons/fa';
 import { useRef } from 'react';
 import { useScroll, useTransform } from 'framer-motion';
@@ -12,6 +13,9 @@ import serviceHero from '../assets/images/radhealth2.png';
 import Link from 'next/link';
 
 const ServiceSection = () => {
+  // Section IDs for auto-scrolling
+  const sectionIds = ['solutions-main'];
+
   // Add parallax ref and scroll controls
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -65,9 +69,11 @@ const ServiceSection = () => {
   return (
     <div className="min-h-screen">
       <Navigation />
+      <AutoScrollSections sectionIds={sectionIds} delay={5000} scrollOffset={80} />
       
       {/* Enhanced Hero Section with Parallax */}
       <section 
+        id="solutions-hero"
         ref={targetRef}
         className="relative h-screen flex items-center justify-center overflow-hidden"
       >
@@ -172,7 +178,10 @@ const ServiceSection = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 md:py-24 bg-white">
+      <section 
+        id="solutions-main"
+        className="py-16 md:py-24 bg-white"
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             <motion.div 
@@ -299,6 +308,7 @@ const ServiceSection = () => {
           </div>
         </div>
       </section>
+
     </div>
   );
 };

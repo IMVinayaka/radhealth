@@ -12,12 +12,7 @@ export default function Approach() {
       image: 'https://t3.ftcdn.net/jpg/13/31/61/44/240_F_1331614422_fnsLmQQoNWqwjThpaBYXtCR6H5B389ba.jpg',
       alt: 'Healthcare professionals team'
     },
-    {
-      title: 'Compliance First',
-      description: 'Our rigorous credentialing process ensures every professional meets all regulatory requirements and your specific standards.',
-      image: 'https://t4.ftcdn.net/jpg/05/53/22/99/240_F_553229992_bjvQkRLRGLuA2a6yQQMnvmR4obPmZq2r.jpg',
-      alt: 'Compliance and documentation'
-    },
+
     {
       title: '24/7 Support',
       description: 'Our dedicated team is always available to address your staffing needs, day or night.',
@@ -33,7 +28,7 @@ export default function Approach() {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="max-w-6xl mx-auto text-center"
         >
           <motion.h2 
@@ -59,45 +54,25 @@ export default function Approach() {
             that make a real difference.
           </motion.p>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {approachItems.map((item, index) => (
               <motion.div 
                 key={index}
                 variants={fadeUp}
                 className="flex flex-col"
               >
-                <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
+                <div className="relative h-[20rem] w-full overflow-hidden rounded-t-xl">
                   <Image
                     src={item.image}
                     alt={item.alt}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
                   />
                 </div>
                 <div className="bg-white p-6 rounded-b-xl shadow-md hover:shadow-lg transition-shadow flex-1 flex flex-col">
                   <h3 className="text-xl font-bold text-text-dark mb-4">{item.title}</h3>
                   <p className="text-text-muted mb-6 flex-1">{item.description}</p>
-                  <a 
-                    href="#contact" 
-                    className="inline-flex items-center text-primary font-medium mt-auto self-start hover:underline"
-                  >
-                    Learn more
-                    <svg 
-                      className="ml-1 w-4 h-4" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M9 5l7 7-7 7" 
-                      />
-                    </svg>
-                  </a>
                 </div>
               </motion.div>
             ))}

@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Navigation from '../components/Navigation';
+import AutoScrollSections from '../components/AutoScrollSections';
 
 // Client Card Component
 const ClientCard = ({ name, delay, index }: { name: string; delay: number; index: number }) => {
@@ -60,6 +61,7 @@ const ClientCard = ({ name, delay, index }: { name: string; delay: number; index
 };
 
 export default function ClientsPage() {
+  const sectionIds = [ 'clients-featured'];
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -100,12 +102,10 @@ export default function ClientsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
+      <AutoScrollSections sectionIds={sectionIds} delay={5000} scrollOffset={80} />
       
-      {/* Hero Section */}
-      <section 
-        ref={targetRef}
-        className="relative h-screen flex items-center justify-center overflow-hidden"
-      >
+      <section id="clients-hero" className="relative h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-4 sm:px-6 lg:px-8" ref={targetRef}>
+        {/* Background with parallax effect */}
         <motion.div 
           className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"
           style={{ 
@@ -146,43 +146,24 @@ export default function ClientsPage() {
           />
         </motion.div>
 
-        {/* Hero Content */}
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto"
-            style={{ y: yText }}
+        {/* Content */}
+        <div className="max-w-7xl mx-auto relative z-10 text-center">
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold text-white mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <motion.span 
-                className="inline-block text-primary-extraLight text-lg md:text-xl mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                Our Valued Partners
-              </motion.span>
-              <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                Trusted by <span className="text-primary-extraLight">Healthcare Leaders</span>
-              </motion.h1>
-              <motion.p 
-                className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                Partnering with top healthcare facilities to deliver exceptional staffing solutions
-              </motion.p>
-            </motion.div>
-          </motion.div>
+            Our Valued Clients
+          </motion.h1>
+          <motion.p 
+            className="text-xl text-white/90 max-w-3xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Partnering with top healthcare facilities to deliver exceptional staffing solutions
+          </motion.p>
         </div>
 
         {/* Scroll Indicator */}
@@ -190,7 +171,7 @@ export default function ClientsPage() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 1 }}
         >
           <span className="text-white text-sm mb-2">Scroll Down</span>
           <motion.div
@@ -204,63 +185,17 @@ export default function ClientsPage() {
         </motion.div>
       </section>
 
-      {/* Clients Grid Section */}
-      <section className="relative py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
-        {/* Floating background elements */}
-        <motion.div 
-          className="absolute -top-40 -left-40 w-80 h-80 bg-primary/5 dark:bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-50 dark:opacity-30"
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div 
-          className="absolute -bottom-20 -right-20 w-96 h-96 bg-primary/10 dark:bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 dark:opacity-20"
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -30, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-16"
+      <section id="clients-featured" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2 
+            className="text-3xl font-bold text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
           >
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Our <span className="text-primary">Valued</span> Clients
-            </motion.h2>
-            <motion.p 
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              We're proud to partner with leading healthcare institutions across the nation
-            </motion.p>
-          </motion.div>
-
+            Featured Clients
+          </motion.h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {clients.map((client, index) => (
               <ClientCard 
@@ -271,28 +206,38 @@ export default function ClientsPage() {
               />
             ))}
           </div>
+        </div>
+      </section>
 
-          <motion.div 
-            className="mt-16 text-center"
+      <section id="clients-testimonials" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h2 
+            className="text-3xl font-bold mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
           >
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-              Interested in becoming a client?
-            </p>
-            <motion.a
-              href="/contact"
-              className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-primary-dark transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Get in Touch
-            </motion.a>
+            What Our Clients Say
+          </motion.h2>
+          <motion.div 
+            className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <blockquote className="text-xl italic text-gray-700 dark:text-gray-300 mb-6">
+              "Working with Radiant Health Staffing has been a game-changer for our facility. Their professionals are highly skilled and reliable."
+            </blockquote>
+            <div className="font-medium">
+              <p className="text-primary">Dr. Sarah Johnson</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Chief Medical Officer, Valleywise Health</p>
+            </div>
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }

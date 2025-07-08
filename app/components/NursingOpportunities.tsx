@@ -22,10 +22,6 @@ export default function WhyChooseUs() {
       description: 'Local insight with national reach'
     },
     {
-      title: 'Compliance First',
-      description: 'JCAHO, HIPAA, CMS, and E-Verify compliant'
-    },
-    {
       title: '24/7 Support',
       description: 'Round-the-clock recruiting and client support'
     }

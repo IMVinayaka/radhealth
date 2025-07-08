@@ -1,20 +1,34 @@
-import dynamic from 'next/dynamic';
+'use client';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Approach from './components/Approach';
 import NursingOpportunities from './components/NursingOpportunities';
-import Contact from './components/Contact';
+import Contact from './contact/page';
+import { useAutoScroll } from './hooks/useAutoScroll';
 
 export default function Home() {
+  // Define the section IDs in the order you want to auto-scroll through
+  const sectionIds = ['approach'];
+  
+  // Initialize the auto-scroll hook
+  useAutoScroll(sectionIds, 5000);
+
   return (
     <main className="min-h-screen">
       <Navigation />
-      
       <div className="pt-16">
-        <Hero />
-        <Approach />
-        <NursingOpportunities />
-        <Contact />
+        <section id="hero">
+          <Hero />
+        </section>
+        <section id="approach">
+          <Approach />
+        </section>
+        <section id="nursing-opportunities">
+          <NursingOpportunities />
+        </section>
+        <section id="contact">
+          <Contact />
+        </section>
       </div>
       
       <footer className="bg-text-dark text-white py-8">
