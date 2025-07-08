@@ -37,9 +37,9 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li><Link href="/about-us" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/solutions" className="text-gray-400 hover:text-white transition-colors">Our Solutions</Link></li>
-              <li><Link href="/clients" className="text-gray-400 hover:text-white transition-colors">For Clients</Link></li>
-              <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors">Opportunities</Link></li>
+              <li><Link href="/solutions" className="text-gray-400 hover:text-white transition-colors">Services</Link></li>
+              <li><Link href="/clients" className="text-gray-400 hover:text-white transition-colors">Clients</Link></li>
+              <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors">Open Jobs</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li>
             </ul>
           </div>
@@ -57,16 +57,13 @@ export default function Footer() {
               </li>
               <li className="flex items-center">
                 <FaPhone className="mr-3 text-primary" />
-                <a href="tel:+1234567890" className="hover:text-primary transition-colors">+1 (234) 567-890</a>
+                <a href="tel:+1234567890" className="hover:text-primary transition-colors">+1 (954)-938-2800 </a>
               </li>
               <li className="flex items-center">
                 <FaEnvelope className="mr-3 text-primary" />
                 <a href="mailto:info@radhealthplus.com" className="hover:text-primary transition-colors">info@radhealthplus.com</a>
               </li>
-              <li className="flex items-center">
-                <FaClock className="mr-3 text-primary" />
-                <span>Mon - Fri: 9:00 AM - 6:00 PM</span>
-              </li>
+   
             </ul>
           </div>
 

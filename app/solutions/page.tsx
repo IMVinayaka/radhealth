@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Navigation from '../components/Navigation';
 import AutoScrollSections from '../components/AutoScrollSections';
 import { FaCheck } from 'react-icons/fa';
 import { useRef } from 'react';
@@ -10,7 +9,6 @@ import { useScroll, useTransform } from 'framer-motion';
 
 // Import images
 import serviceHero from '../assets/images/radhealth2.png';
-import Link from 'next/link';
 
 const ServiceSection = () => {
   // Section IDs for auto-scrolling
@@ -138,12 +136,12 @@ const ServiceSection = () => {
                 Our Expertise
               </motion.span>
               <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                Healthcare Staffing <span className="text-primary-extraLight">Solutions</span>
+                Healthcare Staffing Services
               </motion.h1>
               <motion.p 
                 className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"
@@ -192,10 +190,10 @@ const ServiceSection = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                End-to-End Healthcare Workforce Solutions
+                End-to-End Healthcare Workforce 
               </h2>
               <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                We offer comprehensive healthcare staffing solutions designed to meet your clinical, 
+                We offer comprehensive healthcare staffing services designed to meet your clinical, 
                 operational, and compliance needs—no matter how complex or urgent.
               </p>
               
@@ -203,11 +201,11 @@ const ServiceSection = () => {
                 <h3 className="text-xl font-semibold text-gray-800">What We Offer:</h3>
                 <ul className="space-y-3">
                   {[
-                    "Clinical Staffing Solutions",
+                    "Clinical Staffing",
                     "Allied & Behavioral Health Staffing",
                     "Non-Clinical & Administrative Support",
                     "Government & Public Health Staffing",
-                    "Customized Workforce Solutions"
+                    "Customized Workforce"
                   ].map((item, index) => (
                     <li key={index} className="flex items-start">
                       <FaCheck className="text-primary mt-1 mr-3 flex-shrink-0" />

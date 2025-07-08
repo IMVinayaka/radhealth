@@ -59,7 +59,7 @@ const alliedHealthRoles = [
   { icon: radiationTherapistIcon, title: 'Radiation Therapist' },
   { icon: radiologyTechnicianIcon, title: 'Radiology Technician' },
   { icon: rrtIcon, title: 'Registered Respiratory Therapist (RRT)' },
-  { icon: slpIcon, title: 'Speech Language Pathologist (SLP)' },
+  // { icon: slpIcon, title: 'Speech Language Pathologist (SLP)' },
   { icon: ultrasoundTechIcon, title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
 ];
 

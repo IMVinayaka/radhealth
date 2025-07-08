@@ -11,9 +11,9 @@ import Logo from '../assets/images/rad-health-logo-v1.png';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about-us' },
-  { name: 'Solutions', href: '/solutions' },
+  { name: 'Services', href: '/solutions' },
   { name: 'Clients', href: '/clients' },
-  { name: 'Opportunities', href: '/careers' },
+  { name: 'Open Jobs', href: '/careers' },
 ];
 
 export default function Navigation() {

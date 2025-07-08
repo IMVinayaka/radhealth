@@ -81,59 +81,7 @@ export default function ContactPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Registered Office */}
-            <motion.div 
-              className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="h-64 bg-gray-100 relative">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.6196857556833!2d-80.14335692392247!3d26.20904718997466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9037fbf915095%3A0x7af3c81c238a1f83!2s6750%20N%20Andrews%20Ave%20Suite%20200%2C%20Fort%20Lauderdale%2C%20FL%2033309%2C%20USA!5e0!3m2!1sen!2sin!4v1751980043623!5m2!1sen!2sin" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="absolute inset-0 w-full h-full"
-                ></iframe>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                  <h3 className="text-xl font-semibold text-white">Registered Office</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">6750 N. Andrews Ave., Suite 200<br/>Fort Lauderdale, FL 33309</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                      </svg>
-                    </div>
-                    <a href="tel:9549382800" className="text-gray-700 hover:text-primary transition-colors">954.938.2800</a>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
-                    </div>
-                    <a href="mailto:info@radgov.com" className="text-gray-700 hover:text-primary transition-colors">info@radgov.com</a>
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
+      
 
             {/* Operating From */}
             <motion.div 
@@ -154,7 +102,7 @@ export default function ContactPage() {
                   className="absolute inset-0 w-full h-full"
                 ></iframe>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                  <h3 className="text-xl font-semibold text-white">Operating From</h3>
+                  <h3 className="text-xl font-semibold text-white">Northeast Operations Center</h3>
                 </div>
               </div>
               <div className="p-6">
@@ -174,7 +122,7 @@ export default function ContactPage() {
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                       </svg>
                     </div>
-                    <a href="tel:9549382800" className="text-gray-700 hover:text-primary transition-colors">954.938.2800</a>
+                    <a href="tel:9549382800" className="text-gray-700 hover:text-primary transition-colors">954-938-2800</a>
                   </li>
                   <li className="flex items-center">
                     <div className="bg-primary/10 p-2 rounded-lg mr-4">
@@ -183,7 +131,7 @@ export default function ContactPage() {
                         <polyline points="22,6 12,13 2,6"></polyline>
                       </svg>
                     </div>
-                    <a href="mailto:info@radgov.com" className="text-gray-700 hover:text-primary transition-colors">info@radgov.com</a>
+                    <a href="mailto:info@radhealthplus.com" className="text-gray-700 hover:text-primary transition-colors">info@radhealthplus.com</a>
                   </li>
                 </ul>
               </div>
@@ -367,10 +315,10 @@ export default function ContactPage() {
                         </div>
                         <div className="ml-3">
                           <label htmlFor="consent" className="text-sm text-gray-600">
-                            I Consent To Receive SMS Messages From radgov. Related To Job-Related Offers.
+                            I Consent To Receive SMS Messages From RadHealthPlus. Related To Job-Related Offers.
                             Message And Data Rates May Apply. Message Frequency Varies. Reply HELP For Help Or STOP To
                             Cancel. By Signing Up, I Agree To The Privacy Policy
-                            Located At radgov.com/privacy-policy.
+                            Located At radhealthplus.com/privacy-policy.
                             <span className="text-red-500">*</span>
                           </label>
                           {errors.consent && (
