@@ -12,13 +12,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <Navigation />
       <AutoScrollSections 
         sectionIds={sectionIds} 
         delay={5000} 
         scrollOffset={80} 
       />
-      
       <div className="pt-16">
         <section id="hero" className="">
           <Hero />
@@ -33,7 +31,6 @@ export default function Home() {
           <Contact />
         </section>
       </div>
-      
     </main>
   );
 }

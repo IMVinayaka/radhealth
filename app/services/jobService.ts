@@ -5,7 +5,7 @@ export interface Job {
   JobTitle: string;
   JobState: string;
   JobDescription: string;
-  PostedDate: string;
+  JobPosted: string;
   JobType: string;
   Salary?: string;
   Zip?: string;

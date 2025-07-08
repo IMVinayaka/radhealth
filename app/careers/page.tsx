@@ -33,7 +33,7 @@ export default function CareersPage() {
   const mockJobs: MockJob[] = jobs.map((job, index) => ({
     id: index + 1,
     title: job.JobTitle,
-    postedDate: job.PostedDate,
+    postedDate: job.JobPosted,
     jobId: job.JobID,
     location: job.City && job.JobState ? `${job.City}, ${job.JobState}` : 'Various Locations',
     type: job.JobType,
@@ -170,9 +170,9 @@ export default function CareersPage() {
                             <h3 className="text-xl font-bold text-gray-900 mb-1">{job.title}</h3>
                             <p className="text-primary font-medium mb-3">{job.location}</p>
                           </div>
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+                          {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
                             {job.type}
-                          </span>
+                          </span> */}
                         </div>
                         
                         <div className="flex items-center text-sm text-gray-500 mb-4">
@@ -231,10 +231,10 @@ dangerouslySetInnerHTML={{ __html: job.description || 'No description available'
                     </div>
                     <div className="p-6">
                       <div className="flex justify-between items-center mb-6">
-                        <div>
+                        {/* <div>
                           <p className="text-sm text-gray-500">Job Type</p>
                           <p className="font-medium">{selectedJob.type}</p>
-                        </div>
+                        </div> */}
                         {selectedJob.salary && (
                           <div>
                             <p className="text-sm text-gray-500">Salary</p>

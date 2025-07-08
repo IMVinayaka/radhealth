@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
-import Navigation from '../components/Navigation';
 import AutoScrollSections from '../components/AutoScrollSections';
 
 // Import all icons
@@ -26,7 +25,7 @@ import ptaIcon from '../assets/images/rad_health_icons/PTA.svg';
 import radiationTherapistIcon from '../assets/images/rad_health_icons/Radiation_Therapist.svg';
 import radiologyTechnicianIcon from '../assets/images/rad_health_icons/Radiology_Technician.svg';
 import rrtIcon from '../assets/images/rad_health_icons/RRT.svg';
-import slpIcon from '../assets/images/rad_health_icons/SLP.svg';
+// import slpIcon from '../assets/images/rad_health_icons/SLP.svg';
 import ultrasoundTechIcon from '../assets/images/rad_health_icons/Ultrasound_Tech.svg';
 
 import radhealth2 from '../assets/images/radhealth2.png';

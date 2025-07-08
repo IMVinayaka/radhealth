@@ -26,8 +26,8 @@ export default function RootLayout({
         <Navigation />
         <div className="min-h-screen snap-y snap-mandatory overflow-y-auto">
           {children}
-          <Footer />
         </div>
+        <Footer />
       </body>
     </html>
   );
