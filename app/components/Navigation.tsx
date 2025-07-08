@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import Logo from '../assets/images/rad-health-logo-v1.png'  
 
 const navLinks = [
   { name: 'About', href: '/about-us' },
+  { name: 'Services', href: '/services' },
   { name: 'Opportunities', href: '/#opportunities' },
   { name: 'Clients', href: '/clients' },
   { name: 'Contact', href: '/#contact' },
@@ -42,7 +44,7 @@ export default function Navigation() {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-extrabold text-primary">
-         <Image src="https://radhealthplus.com/assets/images/rad-health-logo-v1.png" alt="Logo" width={150} height={10} />
+         <Image src={Logo} alt="Logo" width={150} height={10} />
         </Link>
 
         {/* Desktop Navigation */}
