@@ -7,10 +7,10 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
 const navLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Opportunities', href: '#opportunities' },
-  { name: 'Clients', href: '#clients' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About', href: '/#about' },
+  { name: 'Opportunities', href: '/#opportunities' },
+  { name: 'Clients', href: '/clients' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
 export default function Navigation() {
@@ -26,6 +26,13 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const isActive = (href: string) => {
+    if (href.startsWith('/#')) {
+      return pathname === '/' || pathname === '';
+    }
+    return pathname === href || pathname.startsWith(href);
+  };
 
   return (
     <header 
@@ -45,8 +52,9 @@ export default function Navigation() {
               key={link.name}
               href={link.href}
               className={`font-medium hover:text-primary transition-colors ${
-                pathname === link.href ? 'text-primary' : 'text-text-dark'
+                isActive(link.href) ? 'text-primary' : 'text-text-dark'
               }`}
+              onClick={() => setIsMenuOpen(false)}
             >
               {link.name}
             </Link>
@@ -60,17 +68,48 @@ export default function Navigation() {
         </nav>
 
         {/* Mobile menu button */}
-        <button 
-          className="md:hidden p-2 text-text-dark"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-6 flex flex-col space-y-1.5">
-            <span className={`block h-0.5 bg-text-dark transition-transform ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-            <span className={`block h-0.5 bg-text-dark ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-            <span className={`block h-0.5 bg-text-dark transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-          </div>
-        </button>
+        <div className="md:hidden">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-text-dark hover:text-primary transition-colors"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+              )}
+            </svg>
+          </button>
+
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+                className="absolute left-0 right-0 top-full bg-white shadow-lg py-4 px-6 md:hidden"
+              >
+                <div className="flex flex-col space-y-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`py-2 font-medium ${
+                        isActive(link.href) ? 'text-primary' : 'text-text-dark hover:text-primary'
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Mobile menu */}
