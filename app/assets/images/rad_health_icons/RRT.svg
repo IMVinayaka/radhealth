@@ -17,12 +17,12 @@
       }
 
       .cls-2 {
-        stroke: #eb8467;
+        stroke: #9ad4d0;
         stroke-width: 1.72px;
       }
 
       .cls-4 {
-        fill: #eb8467;
+        fill: #9ad4d0;
       }
     </style>
   </defs>

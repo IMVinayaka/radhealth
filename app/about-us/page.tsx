@@ -4,6 +4,29 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
 
+// Import all icons
+import cathLabIcon from '../assets/images/rad_health_icons/cath_lab.svg';
+import cotaIcon from '../assets/images/rad_health_icons/COTA.svg';
+import clsIcon from '../assets/images/rad_health_icons/CLS.svg';
+import ctTechIcon from '../assets/images/rad_health_icons/CT_Tech.svg';
+import echoTechIcon from '../assets/images/rad_health_icons/Echo_Tech.svg';
+import irIcon from '../assets/images/rad_health_icons/IR.svg';
+import mltIcon from '../assets/images/rad_health_icons/MLT.svg';
+import mtIcon from '../assets/images/rad_health_icons/MT.svg';
+import mammographyTechIcon from '../assets/images/rad_health_icons/Mammography_Tech.svg';
+import mriTechIcon from '../assets/images/rad_health_icons/MRI_Tech.svg';
+import nuclearMedTechIcon from '../assets/images/rad_health_icons/Nuclear_MedTech.svg';
+import occupationalTherapistIcon from '../assets/images/rad_health_icons/Occupational_Therapist.svg';
+import pharmacistPharmacyTechIcon from '../assets/images/rad_health_icons/Pharmacist_PharmacyTech.svg';
+import phlebotomistsIcon from '../assets/images/rad_health_icons/Phlebotomists.svg';
+import ptIcon from '../assets/images/rad_health_icons/PT.svg';
+import ptaIcon from '../assets/images/rad_health_icons/PTA.svg';
+import radiationTherapistIcon from '../assets/images/rad_health_icons/Radiation_Therapist.svg';
+import radiologyTechnicianIcon from '../assets/images/rad_health_icons/Radiology_Technician.svg';
+import rrtIcon from '../assets/images/rad_health_icons/RRT.svg';
+import slpIcon from '../assets/images/rad_health_icons/SLP.svg';
+import ultrasoundTechIcon from '../assets/images/rad_health_icons/Ultrasound_Tech.svg';
+
 const healthcareRoles = [
   { title: 'RN', description: 'Registered Nurse Medical Surgical/Tele/OR/ER/PCU/ICU' },
   { title: 'CNA', description: 'Certified Nursing Assistant' },
@@ -12,27 +35,27 @@ const healthcareRoles = [
 ];
 
 const alliedHealthRoles = [
-  { icon: '/icons/cath_lab.svg', title: 'Cath Lab Tech' },
-  { icon: '/icons/COTA.svg', title: 'Certified Occupational Therapy Assistant (COTA)' },
-  { icon: '/icons/CLS.svg', title: 'Clinical Lab Scientist (CLS)' },
-  { icon: '/icons/CT_Tech.svg', title: 'CT Tech' },
-  { icon: '/icons/Echo_Tech.svg', title: 'Echo Tech' },
-  { icon: '/icons/IR.svg', title: 'Interventional Radiology (IR) / Special Procedures' },
-  { icon: '/icons/MLT.svg', title: 'Medical Lab Technologist (MLT)' },
-  { icon: '/icons/MT.svg', title: 'Medical Technologist (MT)' },
-  { icon: '/icons/Mammography_Tech.svg', title: 'Mammography Tech' },
-  { icon: '/icons/MRI_Tech.svg', title: 'MRI Tech' },
-  { icon: '/icons/Nuclear_MedTech.svg', title: 'Nuclear Med Tech' },
-  { icon: '/icons/Occupational_Therapist.svg', title: 'Occupational Therapist' },
-  { icon: '/icons/Pharmacist_PharmacyTech.svg', title: 'Pharmacist / Pharmacy Tech' },
-  { icon: '/icons/Phlebotomists.svg', title: 'Phlebotomists' },
-  { icon: '/icons/PT.svg', title: 'Physical Therapist (PT)' },
-  { icon: '/icons/PTA.svg', title: 'Physical Therapy Assistant (PTA)' },
-  { icon: '/icons/Radiation_Therapist.svg', title: 'Radiation Therapist' },
-  { icon: '/icons/Radiology_Technician.svg', title: 'Radiology Technician' },
-  { icon: '/icons/RRT.svg', title: 'Registered Respiratory Therapist (RRT)' },
-  { icon: '/icons/SLP.svg', title: 'Speech Language Pathologist (SLP)' },
-  { icon: '/icons/Ultrasound_Tech.svg', title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
+  { icon: cathLabIcon, title: 'Cath Lab Tech' },
+  { icon: cotaIcon, title: 'Certified Occupational Therapy Assistant (COTA)' },
+  { icon: clsIcon, title: 'Clinical Lab Scientist (CLS)' },
+  { icon: ctTechIcon, title: 'CT Tech' },
+  { icon: echoTechIcon, title: 'Echo Tech' },
+  { icon: irIcon, title: 'Interventional Radiology (IR) / Special Procedures' },
+  { icon: mltIcon, title: 'Medical Lab Technologist (MLT)' },
+  { icon: mtIcon, title: 'Medical Technologist (MT)' },
+  { icon: mammographyTechIcon, title: 'Mammography Tech' },
+  { icon: mriTechIcon, title: 'MRI Tech' },
+  { icon: nuclearMedTechIcon, title: 'Nuclear Med Tech' },
+  { icon: occupationalTherapistIcon, title: 'Occupational Therapist' },
+  { icon: pharmacistPharmacyTechIcon, title: 'Pharmacist / Pharmacy Tech' },
+  { icon: phlebotomistsIcon, title: 'Phlebotomists' },
+  { icon: ptIcon, title: 'Physical Therapist (PT)' },
+  { icon: ptaIcon, title: 'Physical Therapy Assistant (PTA)' },
+  { icon: radiationTherapistIcon, title: 'Radiation Therapist' },
+  { icon: radiologyTechnicianIcon, title: 'Radiology Technician' },
+  { icon: rrtIcon, title: 'Registered Respiratory Therapist (RRT)' },
+  { icon: slpIcon, title: 'Speech Language Pathologist (SLP)' },
+  { icon: ultrasoundTechIcon, title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
 ];
 
 export default function ServicesPage() {
