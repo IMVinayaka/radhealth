@@ -3,12 +3,14 @@ const API_BASE_URL = 'https://intranet.radgov.com/RadgovWebsiteAPI/API';
 export interface Job {
   JobID: string;
   JobTitle: string;
-  City: string;
   JobState: string;
   JobDescription: string;
   PostedDate: string;
   JobType: string;
   Salary?: string;
+  Zip?: string;
+  City?: string;
+  State?: string;
 }
 
 interface SubmitApplicationResponse {
@@ -19,9 +21,18 @@ interface SubmitApplicationResponse {
 
 export const searchJobs = async (keyword: string = '', country: string = '', zipcode: string = '', miles: string = '') => {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/SearchJobsOnFilters?Searchkeywords=${encodeURIComponent(keyword)}&country=${encodeURIComponent(country)}&Zipcode=${encodeURIComponent(zipcode)}&WithinMiles=${encodeURIComponent(miles)}&Group=IV - Health Care`
-    );
+    // Create URLSearchParams and only append non-empty parameters
+    const params = new URLSearchParams();
+    
+    if (keyword?.trim()) params.append('Searchkeywords', keyword.trim());
+    if (country?.trim()) params.append('country', country.trim());
+    if (zipcode?.trim()) params.append('Zipcode', zipcode.trim());
+    if (miles?.trim()) params.append('WithinMiles', miles.trim());
+    
+    // Always include the Group parameter
+    params.append('Group', 'IV - Health Care');
+    
+    const response = await fetch(`${API_BASE_URL}/SearchJobsOnFilters?${params.toString()}`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch jobs');

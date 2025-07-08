@@ -15,6 +15,9 @@ interface MockJob {
   type: string;
   salary: string;
   description: string;
+  Zip: string;
+  City:string;
+  State:string;
 }
 
 export default function CareersPage() {
@@ -29,13 +32,16 @@ export default function CareersPage() {
   // Convert API jobs to mock job format
   const mockJobs: MockJob[] = jobs.map((job, index) => ({
     id: index + 1,
-    title: job.JobTitle || 'Healthcare Professional',
-    postedDate: job.PostedDate || new Date().toISOString().split('T')[0],
-    jobId: job.JobID || `JOB-${index + 1000}`,
+    title: job.JobTitle,
+    postedDate: job.PostedDate,
+    jobId: job.JobID,
     location: job.City && job.JobState ? `${job.City}, ${job.JobState}` : 'Various Locations',
-    type: job.JobType || 'Full-time',
-    salary: job.Salary || '',
-    description: job.JobDescription || 'Job description not available. Please apply for more details.'
+    type: job.JobType,
+    salary: job.Salary,
+    description: job.JobDescription || 'Job description not available. Please apply for more details.',
+    Zip: job.Zip,
+    City: job.City,
+    State:job.State    
   }));
 
   useEffect(() => {
@@ -61,7 +67,7 @@ export default function CareersPage() {
   const filteredJobs = mockJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          job.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = location === '' || job.location.toLowerCase().includes(location.toLowerCase());
+    const matchesLocation = location === '' || job.State.includes(location.toLowerCase()) || job.Zip.includes(location.toLowerCase()) ||job.City.includes(location.toLowerCase()) || job.location.toLowerCase().includes(location.toLowerCase());
     const matchesType = jobType === 'all' || job.type === jobType;
     
     return matchesSearch && matchesLocation && matchesType;
@@ -70,7 +76,7 @@ export default function CareersPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
