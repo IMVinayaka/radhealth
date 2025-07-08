@@ -27,6 +27,9 @@ import rrtIcon from '../assets/images/rad_health_icons/RRT.svg';
 import slpIcon from '../assets/images/rad_health_icons/SLP.svg';
 import ultrasoundTechIcon from '../assets/images/rad_health_icons/Ultrasound_Tech.svg';
 
+import radhealth2 from '../assets/images/radhealth2.png';
+import radhealth3 from '../assets/images/radhealth3.png';
+
 const healthcareRoles = [
   { title: 'RN', description: 'Registered Nurse Medical Surgical/Tele/OR/ER/PCU/ICU' },
   { title: 'CNA', description: 'Certified Nursing Assistant' },
@@ -130,7 +133,7 @@ export default function ServicesPage() {
               className="relative h-96 md:h-[500px] rounded-lg overflow-hidden shadow-xl"
             >
               <Image 
-                src="/images/radhealth2.png" 
+                src={radhealth2}
                 alt="Healthcare Team"
                 fill
                 className="object-cover"
@@ -170,10 +173,10 @@ export default function ServicesPage() {
               viewport={{ once: true }}
             >
               <Image 
-                src="/images/radhealth3.png" 
+                src={radhealth3}
                 alt="Nursing Team"
                 fill
-                className="object-cover"
+                className="object-contain"
               />
             </motion.div>
 
