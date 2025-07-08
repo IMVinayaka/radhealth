@@ -10,9 +10,7 @@ import Logo from '../assets/images/rad-health-logo-v1.png'
 const navLinks = [
   { name: 'About', href: '/about-us' },
   { name: 'Services', href: '/services' },
-  { name: 'Opportunities', href: '/#opportunities' },
   { name: 'Clients', href: '/clients' },
-  { name: 'Contact', href: '/#contact' },
 ];
 
 export default function Navigation() {
@@ -62,7 +60,7 @@ export default function Navigation() {
             </Link>
           ))}
           <Link 
-            href="#contact"
+            href="/contact"
             className="ml-4 px-4 py-2 border-2 border-primary text-primary font-medium rounded-full hover:bg-primary hover:text-white transition-colors"
           >
             Get in touch
