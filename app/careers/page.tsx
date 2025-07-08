@@ -229,10 +229,12 @@ dangerouslySetInnerHTML={{ __html: job.description || 'No description available'
                           <p className="text-sm text-gray-500">Job Type</p>
                           <p className="font-medium">{selectedJob.type}</p>
                         </div>
-                        <div>
-                          <p className="text-sm text-gray-500">Salary</p>
-                          <p className="font-medium">{selectedJob.salary}</p>
-                        </div>
+                        {selectedJob.salary && (
+                          <div>
+                            <p className="text-sm text-gray-500">Salary</p>
+                            <p className="font-medium">{selectedJob.salary}</p>
+                          </div>
+                        )}
                         <div>
                           <p className="text-sm text-gray-500">Posted</p>
                           <p className="font-medium">
