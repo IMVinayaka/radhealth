@@ -177,8 +177,8 @@ export default function Contact() {
                     <h4 className="text-sm font-semibold text-text-muted uppercase tracking-wider">
                       Email
                     </h4>
-                    <a href="mailto:info@radhealth.com" className="block text-lg text-text-dark hover:text-primary transition-colors">
-                      info@radhealth.com
+                    <a href="mailto:info@radhealthplus.com" className="block text-lg text-text-dark hover:text-primary transition-colors">
+                      info@radhealthplus.com
                     </a>
                   </div>
                 </div>

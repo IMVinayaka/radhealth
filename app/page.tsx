@@ -2,8 +2,6 @@ import dynamic from 'next/dynamic';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Approach from './components/Approach';
-// import WhyChooseUs from './components/WhyChooseUs';
-import LeadershipCarousel from './components/LeadershipCarousel';
 import NursingOpportunities from './components/NursingOpportunities';
 import Contact from './components/Contact';
 
@@ -15,8 +13,6 @@ export default function Home() {
       <div className="pt-16">
         <Hero />
         <Approach />
-        {/* <WhyChooseUs /> */}
-        <LeadershipCarousel />
         <NursingOpportunities />
         <Contact />
       </div>

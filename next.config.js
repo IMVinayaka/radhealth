@@ -4,12 +4,13 @@ const repoName = 'radhealth';
 const basePath = isProd ? `/${repoName}` : '';
 
 const nextConfig = {
-  output: 'export',
-  basePath: basePath,
-  assetPrefix: basePath ? `${basePath}/` : '',
+  // Only enable output: 'export' in production
+  ...(isProd ? { output: 'export' } : {}),
+  ...(isProd ? { basePath } : {}),
+  ...(isProd ? { assetPrefix: `${basePath}/` } : {}),
   reactStrictMode: true,
   images: {
-    unoptimized: true,
+    unoptimized: isProd, // Only unoptimize in production
     remotePatterns: [
       {
         protocol: 'https',
@@ -23,33 +24,23 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'admin.radiants.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'radhealthplus.com',
+      },
     ],
   },
   trailingSlash: true,
   distDir: 'out',
   optimizeFonts: false,
   experimental: {
-    // Disable optimizeCss as it's causing issues with critters
+    // Disable optimizeCss as it's causing issues
     // optimizeCss: true,
   },
-  // Disable headers for static export
-  // headers: async () => {
-  //   return [
-  //     {
-  //       source: '/(.*).woff2',
-  //       headers: [
-  //         {
-  //           key: 'Cache-Control',
-  //           value: 'public, max-age=31536000, immutable',
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
 };
 
 // Only add headers in development
-if (process.env.NODE_ENV === 'development') {
+if (!isProd) {
   nextConfig.headers = async () => {
     return [
       {
