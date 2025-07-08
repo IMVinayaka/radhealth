@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '../components/Navigation';
+import JobApplicationModal from '../components/jobApplicationModal';
 
 // Mock data - replace with your API data
 const mockJobs = [
@@ -44,6 +45,7 @@ export default function CareersPage() {
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState('all');
   const [selectedJob, setSelectedJob] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredJobs = mockJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -53,6 +55,13 @@ export default function CareersPage() {
     
     return matchesSearch && matchesLocation && matchesType;
   });
+
+    // Fetch job details based on params.jobId
+    const jobDetails = {
+        id:'34798237',
+        title: "Job Title",
+        // ... other job details
+      };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -228,7 +237,7 @@ export default function CareersPage() {
                       </div>
                       
                       <div className="space-y-4">
-                        <button className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        <button onClick={() => setIsModalOpen(true)} className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors">
                           Apply Now
                         </button>
                   
@@ -264,6 +273,13 @@ export default function CareersPage() {
           </button>
         </div>
       </section>
+
+      <JobApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        jobTitle={jobDetails.title}
+        jobId={jobDetails.id}
+      />
     </div>
   );
 }
