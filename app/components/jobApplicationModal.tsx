@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { submitJobApplication, submitCertification } from '../services/jobService';
 
 const CERT_OPTIONS = [
   "ABOR", "ACLR", "BLS", "LPN", "NBSTSA", 
@@ -43,6 +44,7 @@ export default function JobApplicationModal({
   }>({ type: null, message: '' });
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -59,6 +61,20 @@ export default function JobApplicationModal({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen, onClose]);
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      mobile: '',
+      message: '',
+      resume: null,
+    });
+    setCertifications([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -100,61 +116,79 @@ export default function JobApplicationModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('mobile', formData.mobile);
-      formDataToSend.append('message', formData.message);
-      formDataToSend.append('jobId', jobId);
-      
-      if (formData.resume) {
-        formDataToSend.append('resume', formData.resume);
-      }
-
-      certifications.forEach((cert, index) => {
-        formDataToSend.append(`certifications[${index}][name]`, cert.name);
-        if (cert.file) {
-          formDataToSend.append(`certifications[${index}][file]`, cert.file);
-        }
-      });
-
-      // Replace with your API endpoint
-      const response = await fetch('/api/job-application', {
-        method: 'POST',
-        body: formDataToSend,
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setSubmitStatus({
-          type: 'success',
-          message: 'Application submitted successfully!'
-        });
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          mobile: '',
-          message: '',
-          resume: null,
-        });
-        setCertifications([]);
-        // Close modal after 2 seconds
-        setTimeout(() => {
-          onClose();
-          setSubmitStatus({ type: null, message: '' });
-        }, 2000);
-      } else {
-        throw new Error(result.message || 'Failed to submit application');
-      }
-    } catch (error) {
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.mobile || !formData.resume) {
       setSubmitStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'An error occurred'
+        message: 'Please fill in all required fields and upload your resume.'
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+    
+    try {
+      // Prepare main application form data
+      const formDataToSend = new FormData();
+      formDataToSend.append('FullName', formData.name);
+      formDataToSend.append('emailID', formData.email);
+      formDataToSend.append('MobileNumber', formData.mobile);
+      formDataToSend.append('Message', formData.message || '');
+      formDataToSend.append('JobID', jobId);
+      
+      if (formData.resume) {
+        formDataToSend.append('FILE', formData.resume);
+      }
+
+      // Submit main application
+      const appResponse = await submitJobApplication(formDataToSend);
+
+      if (!appResponse.success) {
+        throw new Error(appResponse.message || 'Failed to submit application');
+      }
+
+      // Submit certifications if any
+      if (certifications.length > 0) {
+        const certPromises = certifications
+          .filter(cert => cert.name && cert.file)
+          .map(async (cert) => {
+            const certFormData = new FormData();
+            certFormData.append('emailID', formData.email);
+            certFormData.append('JobID', jobId);
+            certFormData.append('CertificateName', cert.name);
+            certFormData.append('FILE', cert.file as Blob);
+            
+            return submitCertification(certFormData);
+          });
+
+        const certResults = await Promise.all(certPromises);
+        const failedCerts = certResults.filter(result => !result.success);
+        
+        if (failedCerts.length > 0) {
+          console.warn('Some certifications failed to upload:', failedCerts);
+        }
+      }
+
+      // Show success message
+      setSubmitStatus({
+        type: 'success',
+        message: 'Application submitted successfully!',
+      });
+
+      // Reset form and close modal after delay
+      resetForm();
+      setTimeout(() => {
+        onClose();
+        setSubmitStatus({ type: null, message: '' });
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'An error occurred while submitting your application.'
       });
     } finally {
       setIsSubmitting(false);
@@ -178,6 +212,7 @@ export default function JobApplicationModal({
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
+              disabled={isSubmitting}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -188,8 +223,8 @@ export default function JobApplicationModal({
           {submitStatus.type && (
             <div className={`mb-4 p-3 rounded-md ${
               submitStatus.type === 'success' 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-red-100 text-red-800'
+                ? 'bg-green-100 text-green-800 border border-green-200' 
+                : 'bg-red-100 text-red-800 border border-red-200'
             }`}>
               {submitStatus.message}
             </div>
@@ -198,108 +233,128 @@ export default function JobApplicationModal({
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
+                  id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
                   required
-                  minLength={2}
-                  placeholder="Enter your full name"
+                  disabled={isSubmitting}
                 />
               </div>
-
+              
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
                   required
-                  placeholder="Enter your email"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mobile Number <span className="text-red-500">*</span>
+                <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
+                  id="mobile"
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
                   required
-                  placeholder="Enter your phone number"
+                  disabled={isSubmitting}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-1">
                   Resume <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="file"
-                  name="resume"
-                  onChange={handleFileChange}
-                  className="w-full px-3 py-2 text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-primary/10 file:text-primary
-                    hover:file:bg-primary/20"
-                  accept=".pdf,.doc,.docx,.txt"
-                  required
-                />
-                <p className="text-xs text-gray-500 mt-1">Accepted formats: .pdf, .doc, .docx, .txt</p>
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept=".pdf,.doc,.docx"
+                    className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 rounded-md transition-colors"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">PDF, DOC, DOCX (Max 5MB)</p>
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                Cover Letter (Optional)
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                disabled={isSubmitting}
+              />
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Certifications (Max 5)
+                  Certifications (Optional)
                 </label>
                 <button
                   type="button"
                   onClick={addCertification}
-                  className="text-sm text-primary hover:text-primary-dark font-medium"
+                  className="text-sm text-primary hover:text-primary-dark font-medium flex items-center"
+                  disabled={isSubmitting || certifications.length >= 5}
                 >
-                  + Add Certification
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Add Certification
                 </button>
               </div>
-
-              <div className="space-y-3" id="certification-container">
+              
+              <div className="space-y-3">
                 {certifications.map((cert) => (
-                  <div key={cert.id} className="border border-gray-200 rounded-md p-3 relative">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <select
-                          value={cert.name}
-                          onChange={(e) => handleCertificationChange(cert.id, 'name', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
-                          required
-                        >
-                          <option value="">Select Certification</option>
-                          {CERT_OPTIONS.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex items-center gap-2">
+                  <div key={cert.id} className="flex items-start space-x-2 bg-gray-50 p-3 rounded-md">
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <select
+                        value={cert.name}
+                        onChange={(e) => handleCertificationChange(cert.id, 'name', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70 text-sm bg-white"
+                        disabled={isSubmitting}
+                      >
+                        <option value="">Select certification</option>
+                        {CERT_OPTIONS.map((certType) => (
+                          <option key={certType} value={certType}>
+                            {certType}
+                          </option>
+                        ))}
+                      </select>
+                      
+                      <div className="relative">
                         <input
                           type="file"
                           onChange={(e) => 
@@ -309,78 +364,53 @@ export default function JobApplicationModal({
                               e.target.files && e.target.files[0] ? e.target.files[0] : null
                             )
                           }
-                          className="flex-1 text-sm text-gray-500
-                            file:mr-2 file:py-1.5 file:px-3
-                            file:rounded-md file:border-0
-                            file:text-xs file:font-medium
-                            file:bg-gray-100 file:text-gray-700
-                            hover:file:bg-gray-200"
-                          accept=".pdf,.doc,.docx,.jpg,.png,.jpeg"
-                          required
+                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                          className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 rounded-md transition-colors"
+                          disabled={isSubmitting}
                         />
-                        <button
-                          type="button"
-                          onClick={() => removeCertification(cert.id)}
-                          className="text-red-500 hover:text-red-700"
-                          aria-label="Remove certification"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
                       </div>
                     </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => removeCertification(cert.id)}
+                      className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                      disabled={isSubmitting}
+                      aria-label="Remove certification"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Message <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
-                required
-                minLength={5}
-                placeholder="Tell us why you're a good fit for this position"
-              ></textarea>
-            </div>
-
-            <p className="text-xs text-gray-500">
-              We'll never share your details with anyone else.
-            </p>
-
-            <div className="flex justify-end space-x-3 pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
+            <div className="pt-4 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 disabled:opacity-50 flex items-center"
+                className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/70 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isSubmitting ? (
-                  <>
+                  <span className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Submitting...
-                  </>
+                  </span>
                 ) : (
                   'Submit Application'
                 )}
               </button>
+              
+              <p className="mt-3 text-xs text-gray-500 text-center">
+                By submitting this application, you agree to our{' '}
+                <a href="/privacy-policy" className="text-primary hover:underline">privacy policy</a> and{' '}
+                <a href="/terms" className="text-primary hover:underline">terms of service</a>.
+              </p>
             </div>
           </form>
         </div>

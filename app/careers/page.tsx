@@ -1,80 +1,62 @@
-// app/careers/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import JobApplicationModal from '../components/jobApplicationModal';
+import { searchJobs, Job } from '../services/jobService';
 
-// Mock data - replace with your API data
-const mockJobs = [
-  {
-    id: 1,
-    title: 'Registered Nurse (RN)',
-    postedDate: '2024-07-01',
-    jobId: 'NUR-001',
-    location: 'New York, NY',
-    type: 'Contract',
-    salary: '$75,000 - $95,000',
-    description: 'Provide direct patient care, administer medications, and collaborate with healthcare teams to ensure the highest quality of care for our patients.'
-  },
-  {
-    id: 2,
-    title: 'Medical Assistant',
-    postedDate: '2024-07-05',
-    jobId: 'MA-002',
-    location: 'Los Angeles, CA',
-    type: 'Contract',
-    salary: '$45,000 - $55,000',
-    description: 'Assist healthcare providers with patient care, perform basic clinical tasks, and ensure smooth clinic operations.'
-  },
-  {
-    id: 3,
-    title: 'Physical Therapist',
-    postedDate: '2024-06-28',
-    jobId: 'PT-003',
-    location: 'Chicago, IL',
-    type: 'Full-time',
-    salary: '$85,000 - $110,000',
-    description: 'Develop and implement individualized treatment plans to help patients improve mobility and manage pain.'
-  },
-  {
-    id: 4,
-    title: 'Medical Billing Specialist',
-    postedDate: '2024-07-10',
-    jobId: 'BILL-004',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$50,000 - $65,000',
-    description: 'Process and submit insurance claims, verify patient eligibility, and handle billing inquiries.'
-  },
-  {
-    id: 5,
-    title: 'Radiology Technologist',
-    postedDate: '2024-07-08',
-    jobId: 'RAD-005',
-    location: 'Houston, TX',
-    type: 'Full-time',
-    salary: '$65,000 - $85,000',
-    description: 'Perform diagnostic imaging examinations and ensure high-quality images for accurate diagnosis.'
-  },
-  {
-    id: 6,
-    title: 'Healthcare Administrator',
-    postedDate: '2024-07-12',
-    jobId: 'ADMIN-006',
-    location: 'Boston, MA',
-    type: 'Full-time',
-    salary: '$90,000 - $120,000',
-    description: 'Oversee daily operations of healthcare facilities and ensure compliance with healthcare regulations.'
-  }
-];
+// Mock data structure to match the original design
+interface MockJob {
+  id: number;
+  title: string;
+  postedDate: string;
+  jobId: string;
+  location: string;
+  type: string;
+  salary: string;
+  description: string;
+}
 
 export default function CareersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState('all');
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState<MockJob | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Convert API jobs to mock job format
+  const mockJobs: MockJob[] = jobs.map((job, index) => ({
+    id: index + 1,
+    title: job.JobTitle || 'Healthcare Professional',
+    postedDate: job.PostedDate || new Date().toISOString().split('T')[0],
+    jobId: job.JobID || `JOB-${index + 1000}`,
+    location: job.City && job.JobState ? `${job.City}, ${job.JobState}` : 'Various Locations',
+    type: job.JobType || 'Full-time',
+    salary: job.Salary || '',
+    description: job.JobDescription || 'Job description not available. Please apply for more details.'
+  }));
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const data = await searchJobs(searchTerm, '', location);
+        setJobs(data);
+      } catch (err) {
+        console.error('Error fetching jobs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchJobs();
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm, location]);
 
   const filteredJobs = mockJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -85,18 +67,16 @@ export default function CareersPage() {
     return matchesSearch && matchesLocation && matchesType;
   });
 
-    // Fetch job details based on params.jobId
-    const jobDetails = {
-        id:'34798237',
-        title: "Job Title",
-        // ... other job details
-      };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
-
-
       {/* Search Section */}
       <section className="py-12 mt-20 bg-white">
         <div className="container mx-auto px-4">
@@ -140,7 +120,6 @@ export default function CareersPage() {
                   <option value="Full-time">Full-time</option>
                   <option value="Part-time">Part-time</option>
                   <option value="Contract">Contract</option>
-                  <option value="Internship">Internship</option>
                 </select>
               </div>
             </div>
@@ -173,7 +152,9 @@ export default function CareersPage() {
                   filteredJobs.map((job) => (
                     <motion.div
                       key={job.id}
-                      className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.id === job.id ? 'border-primary bg-primary-light/20' : ''}`}
+                      className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${
+                        selectedJob?.id === job.id ? 'border-primary bg-primary-light/20' : ''
+                      }`}
                       whileHover={{ y: -5 }}
                       onClick={() => setSelectedJob(job)}
                     >
@@ -195,18 +176,30 @@ export default function CareersPage() {
                             </svg>
                             Posted {new Date(job.postedDate).toLocaleDateString()}
                           </div>
-                          <div className="flex items-center">
-                            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            {job.salary}
-                          </div>
+                          { job.salary && (
+                            <div className="flex items-center">
+                              <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                              </svg>
+                              {job.salary}
+                            </div>
+                          )}
                         </div>
                         
-                        <p className="text-gray-600 line-clamp-2 mb-4">{job.description}</p>
+                        <div 
+  className="text-gray-700 mb-4 prose max-w-none" 
+dangerouslySetInnerHTML={{ __html: job.description || 'No description available' }}
+/>
                         
-                        <button className="text-primary font-medium hover:text-primary-dark transition-colors">
-                          View Details &rarr;
+                        <button 
+                          className="text-primary font-medium hover:text-primary-dark transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedJob(job);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          Apply Now &rarr;
                         </button>
                       </div>
                     </motion.div>
@@ -250,25 +243,19 @@ export default function CareersPage() {
                       
                       <div className="mb-6">
                         <h3 className="text-lg font-bold mb-3">Job Description</h3>
-                        <p className="text-gray-700 mb-4">{selectedJob.description}</p>
-                        <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                      </div>
-                      
-                      <div className="mb-6">
-                        <h3 className="text-lg font-bold mb-3">Requirements</h3>
-                        <ul className="list-disc list-inside space-y-2 text-gray-700">
-                          <li>3+ years of experience in a similar role</li>
-                          <li>Bachelor's degree in a related field</li>
-                          <li>Strong communication and teamwork skills</li>
-                          <li>Ability to work in a fast-paced environment</li>
-                        </ul>
+                        <div 
+  className="text-gray-700 mb-4 prose max-w-none" 
+dangerouslySetInnerHTML={{ __html: selectedJob.description || 'No description available' }}
+/>
                       </div>
                       
                       <div className="space-y-4">
-                        <button onClick={() => setIsModalOpen(true)} className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        <button 
+                          onClick={() => setIsModalOpen(true)}
+                          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                        >
                           Apply Now
                         </button>
-                  
                       </div>
                     </div>
                   </div>
@@ -289,24 +276,12 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="bg-primary text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Can't find what you're looking for?</h2>
-          <p className="text-xl text-primary-extraLight/90 mb-8 max-w-2xl mx-auto">
-            We're always looking for talented individuals to join our team. Send us your resume and we'll contact you when a matching position becomes available.
-          </p>
-          <button className="bg-white text-primary hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors">
-            Submit Your Resume
-          </button>
-        </div>
-      </section>
-
+      {/* Job Application Modal */}
       <JobApplicationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        jobTitle={jobDetails.title}
-        jobId={jobDetails.id}
+        jobTitle={selectedJob?.title || ''}
+        jobId={selectedJob?.jobId || ''}
       />
     </div>
   );
