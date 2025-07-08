@@ -155,7 +155,7 @@ export default function AboutUsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                About <span className="text-primary-extraLight">Radiant Health Staffing</span>
+                About <span className="text-primary-extraLight">RadHealth Staffing</span>
               </motion.h1>
               <motion.p 
                 className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"
@@ -291,7 +291,7 @@ export default function AboutUsPage() {
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <h3 className="text-2xl font-bold text-red-600 mb-2">{role.title}</h3>
+                  <h3 className="text-2xl font-bold text-primary mb-2">{role.title}</h3>
                   <p className="text-gray-700">{role.description}</p>
                 </motion.div>
               ))}

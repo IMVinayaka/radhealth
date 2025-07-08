@@ -209,34 +209,7 @@ export default function ClientsPage() {
         </div>
       </section>
 
-      <section id="clients-testimonials" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.h2 
-            className="text-3xl font-bold mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            What Our Clients Say
-          </motion.h2>
-          <motion.div 
-            className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <blockquote className="text-xl italic text-gray-700 dark:text-gray-300 mb-6">
-              "Working with Radiant Health Staffing has been a game-changer for our facility. Their professionals are highly skilled and reliable."
-            </blockquote>
-            <div className="font-medium">
-              <p className="text-primary">Dr. Sarah Johnson</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Chief Medical Officer, Valleywise Health</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+
 
     </div>
   );

@@ -4,29 +4,32 @@ import Hero from './components/Hero';
 import Approach from './components/Approach';
 import NursingOpportunities from './components/NursingOpportunities';
 import Contact from './contact/page';
-import { useAutoScroll } from './hooks/useAutoScroll';
+import AutoScrollSections from './components/AutoScrollSections';
 
 export default function Home() {
   // Define the section IDs in the order you want to auto-scroll through
   const sectionIds = ['approach'];
-  
-  // Initialize the auto-scroll hook
-  useAutoScroll(sectionIds, 5000);
 
   return (
     <main className="min-h-screen">
       <Navigation />
+      <AutoScrollSections 
+        sectionIds={sectionIds} 
+        delay={5000} 
+        scrollOffset={80} 
+      />
+      
       <div className="pt-16">
-        <section id="hero">
+        <section id="hero" className="">
           <Hero />
         </section>
-        <section id="approach">
+        <section id="approach" className="">
           <Approach />
         </section>
-        <section id="nursing-opportunities">
+        <section id="nursing-opportunities" className="">
           <NursingOpportunities />
         </section>
-        <section id="contact">
+        <section id="contact" className="">
           <Contact />
         </section>
       </div>
