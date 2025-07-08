@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
-import Logo from '../assets/images/rad-health-logo-v1.png'  
+import Logo from '../assets/images/rad-health-logo-v1.png';
 
-const navLinks = [
+const navigation = [
+  { name: 'Home', href: '/' },
   { name: 'About', href: '/about-us' },
   { name: 'Solutions', href: '/solutions' },
   { name: 'Clients', href: '/clients' },
@@ -23,10 +25,14 @@ export default function Navigation() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
+  };
 
   const isActive = (href: string) => {
     if (href.startsWith('/#')) {
@@ -43,73 +49,56 @@ export default function Navigation() {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-extrabold text-primary">
-         <Image src={Logo} alt="Logo" width={150} height={10} />
+          <Image src={Logo} alt="Logo" width={150} height={10} />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name}
-              href={link.href}
-              className={`font-medium hover:text-primary transition-colors ${
-                isActive(link.href) ? 'text-primary' : 'text-text-dark'
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`relative px-1 py-2 text-sm font-medium transition-colors ${
+                isActive(item.href) 
+                  ? 'text-primary' 
+                  : 'text-gray-700 hover:text-primary'
               }`}
-              onClick={() => setIsMenuOpen(false)}
             >
-              {link.name}
+              {item.name}
+              {isActive(item.href) && (
+                <motion.span 
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  layoutId="activeNav"
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 30
+                  }}
+                />
+              )}
             </Link>
           ))}
-          <Link 
+          <Link
             href="/contact"
-            className="ml-4 px-4 py-2 border-2 border-primary text-primary font-medium rounded-full hover:bg-primary hover:text-white transition-colors"
+            className="ml-4 px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary-dark transition-colors"
           >
-            Get in touch
+            Get Started
           </Link>
         </nav>
 
         {/* Mobile menu button */}
         <div className="md:hidden">
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-text-dark hover:text-primary transition-colors"
+          <button
+            onClick={toggleMenu}
+            className="text-gray-700 hover:text-primary focus:outline-none"
             aria-label="Toggle menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-              )}
-            </svg>
-          </button>
-
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
-                className="absolute left-0 right-0 top-full bg-white shadow-lg py-4 px-6 md:hidden"
-              >
-                <div className="flex flex-col space-y-4">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className={`py-2 font-medium ${
-                        isActive(link.href) ? 'text-primary' : 'text-text-dark hover:text-primary'
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </motion.div>
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
             )}
-          </AnimatePresence>
+          </button>
         </div>
       </div>
 
@@ -117,29 +106,31 @@ export default function Navigation() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-white border-t border-gray-100"
           >
-            <div className="px-4 py-2 space-y-4">
-              {navLinks.map((link) => (
+            <div className="container mx-auto px-4 py-4 space-y-4">
+              {navigation.map((item) => (
                 <Link
-                  key={link.name}
-                  href={link.href}
-                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                  key={item.name}
+                  href={item.href}
+                  onClick={toggleMenu}
+                  className={`block py-2 text-gray-700 hover:text-primary ${
+                    isActive(item.href) ? 'text-primary font-medium' : ''
+                  }`}
                 >
-                  {link.name}
+                  {item.name}
                 </Link>
               ))}
               <Link
-                href="#contact"
-                className="block w-full text-center py-2 border-2 border-primary text-primary font-medium rounded-full hover:bg-primary hover:text-white transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+                href="/contact"
+                onClick={toggleMenu}
+                className="block w-full text-center py-2 px-4 bg-primary text-white rounded-md font-medium hover:bg-primary-dark transition-colors"
               >
-                Get in touch
+                Get Started
               </Link>
             </div>
           </motion.div>
