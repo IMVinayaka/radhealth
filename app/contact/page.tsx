@@ -88,15 +88,17 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="h-48 bg-gradient-to-r from-primary/10 to-primary/5 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl text-primary/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
-                </div>
+              <div className="h-64 bg-gray-100 relative">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.6196857556833!2d-80.14335692392247!3d26.20904718997466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9037fbf915095%3A0x7af3c81c238a1f83!2s6750%20N%20Andrews%20Ave%20Suite%20200%2C%20Fort%20Lauderdale%2C%20FL%2033309%2C%20USA!5e0!3m2!1sen!2sin!4v1751980043623!5m2!1sen!2sin" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0 w-full h-full"
+                ></iframe>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
                   <h3 className="text-xl font-semibold text-white">Registered Office</h3>
                 </div>
@@ -140,15 +142,17 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="h-48 bg-gradient-to-r from-primary/10 to-primary/5 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl text-primary/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
-                </div>
+              <div className="h-64 bg-gray-100 relative">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3041.5101890251512!2d-74.58806872349624!3d40.33102696085016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3ddfa44226b8f%3A0x4252cdebba2c7d7d!2s101%20Morgan%20Ln%20%23304%2C%20Plainsboro%20Township%2C%20NJ%2008536%2C%20USA!5e0!3m2!1sen!2sin!4v1751980127826!5m2!1sen!2sin" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0 w-full h-full"
+                ></iframe>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
                   <h3 className="text-xl font-semibold text-white">Operating From</h3>
                 </div>

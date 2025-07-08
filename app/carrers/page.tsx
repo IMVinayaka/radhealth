@@ -10,33 +10,63 @@ import JobApplicationModal from '../components/jobApplicationModal';
 const mockJobs = [
   {
     id: 1,
-    title: 'Senior Software Engineer',
+    title: 'Registered Nurse (RN)',
     postedDate: '2024-07-01',
-    jobId: 'TECH-001',
-    location: 'San Francisco, CA',
-    type: 'Full-time',
-    salary: '$120,000 - $150,000',
-    description: 'We are looking for an experienced software engineer to join our team...'
+    jobId: 'NUR-001',
+    location: 'New York, NY',
+    type: 'Contract',
+    salary: '$75,000 - $95,000',
+    description: 'Provide direct patient care, administer medications, and collaborate with healthcare teams to ensure the highest quality of care for our patients.'
   },
   {
     id: 2,
-    title: 'Product Manager',
+    title: 'Medical Assistant',
     postedDate: '2024-07-05',
-    jobId: 'PM-002',
-    location: 'Remote',
-    type: 'Full-time',
-    salary: '$110,000 - $140,000',
-    description: 'Lead product development and work with cross-functional teams...'
+    jobId: 'MA-002',
+    location: 'Los Angeles, CA',
+    type: 'Contract',
+    salary: '$45,000 - $55,000',
+    description: 'Assist healthcare providers with patient care, perform basic clinical tasks, and ensure smooth clinic operations.'
   },
   {
     id: 3,
-    title: 'UX/UI Designer',
+    title: 'Physical Therapist',
     postedDate: '2024-06-28',
-    jobId: 'DESIGN-003',
-    location: 'New York, NY',
-    type: 'Contract',
-    salary: '$90 - $120/hr',
-    description: 'Create beautiful and intuitive user experiences for our products...'
+    jobId: 'PT-003',
+    location: 'Chicago, IL',
+    type: 'Full-time',
+    salary: '$85,000 - $110,000',
+    description: 'Develop and implement individualized treatment plans to help patients improve mobility and manage pain.'
+  },
+  {
+    id: 4,
+    title: 'Medical Billing Specialist',
+    postedDate: '2024-07-10',
+    jobId: 'BILL-004',
+    location: 'Remote',
+    type: 'Full-time',
+    salary: '$50,000 - $65,000',
+    description: 'Process and submit insurance claims, verify patient eligibility, and handle billing inquiries.'
+  },
+  {
+    id: 5,
+    title: 'Radiology Technologist',
+    postedDate: '2024-07-08',
+    jobId: 'RAD-005',
+    location: 'Houston, TX',
+    type: 'Full-time',
+    salary: '$65,000 - $85,000',
+    description: 'Perform diagnostic imaging examinations and ensure high-quality images for accurate diagnosis.'
+  },
+  {
+    id: 6,
+    title: 'Healthcare Administrator',
+    postedDate: '2024-07-12',
+    jobId: 'ADMIN-006',
+    location: 'Boston, MA',
+    type: 'Full-time',
+    salary: '$90,000 - $120,000',
+    description: 'Oversee daily operations of healthcare facilities and ensure compliance with healthcare regulations.'
   }
 ];
 
@@ -145,7 +175,7 @@ export default function CareersPage() {
                   filteredJobs.map((job) => (
                     <motion.div
                       key={job.id}
-                      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                      className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.id === job.id ? 'border-primary bg-primary-light/20' : ''}`}
                       whileHover={{ y: -5 }}
                       onClick={() => setSelectedJob(job)}
                     >
