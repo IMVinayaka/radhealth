@@ -9,8 +9,9 @@ import Logo from '../assets/images/rad-health-logo-v1.png'
 
 const navLinks = [
   { name: 'About', href: '/about-us' },
-  { name: 'Services', href: '/services' },
+  { name: 'Solutions', href: '/solutions' },
   { name: 'Clients', href: '/clients' },
+  { name: 'Opportunities', href: '/carrers' },
 ];
 
 export default function Navigation() {
