@@ -15,10 +15,7 @@ export interface ContactFormResponse {
 }
 
 export const submitContactForm = async (data: ContactFormData): Promise<ContactFormResponse> => {
-  // Import the API_BASE_URL from jobService
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { API_BASE_URL } = await import('./jobService');
+  const API_BASE_URL = 'https://intranet.radgov.com/RadgovWebsiteAPI/API';
   const response = await fetch(`${API_BASE_URL}/ContactForm`, {
     method: 'POST',
     headers: {
