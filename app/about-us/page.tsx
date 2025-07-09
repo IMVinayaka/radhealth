@@ -154,7 +154,7 @@ export default function AboutUsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                About <span className="text-primary-extraLight">RadHealth Staffing</span>
+                About <span className="text-primary-extraLight">RadHealth <sup>+</sup> Staffing</span>
               </motion.h1>
               <motion.p 
                 className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"

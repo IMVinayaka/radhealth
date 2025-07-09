@@ -79,21 +79,21 @@ export default function ClientsPage() {
     { name: "Atrium Health", delay: 0.2 },
     { name: "BrightSpring Health Services", delay: 0.25 },
     { name: "Care New England Health System", delay: 0.3 },
-    { name: "Carpenter Technology", delay: 0.35 },
+   
     { name: "Cedars-Sinai Medical Center", delay: 0.4 },
     { name: "Cross Country Healthcare", delay: 0.45 },
     { name: "Evangelical Lutheran Good Samaritan Society", delay: 0.5 },
     { name: "Genesis HealthCare", delay: 0.55 },
     { name: "John Muir Health", delay: 0.6 },
-    { name: "KPC Health", delay: 0.65 },
+  
     { name: "Lehigh Valley Health Network", delay: 0.7 },
-    { name: "Medefis", delay: 0.75 },
+
     { name: "Novant Health", delay: 0.8 },
     { name: "Ohio State University", delay: 0.85 },
-    { name: "Parkview Health", delay: 0.9 },
+
     { name: "PIH Health", delay: 0.95 },
     { name: "Providence Medical Center", delay: 1 },
-    { name: "Sanford Health", delay: 1.05 },
+
     { name: "Summa Health", delay: 1.1 },
     { name: "Valleywise Health Medical Center", delay: 1.15 },
     { name: "Wake Forest University Baptist Medical Center", delay: 1.2 }
