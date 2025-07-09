@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_BASE_URL: 'https://lokeshbsradiants.github.io/radhealth/'
+          NEXT_PUBLIC_BASE_URL: 'http://imvinayaka.github.io/radhealthplus/'
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
