@@ -80,7 +80,7 @@ export default function ContactPage() {
             <div className="w-20 h-1 bg-primary mx-auto"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="mx-auto w-[500px] grid grid-cols-1">
       
 
             {/* Operating From */}
@@ -101,10 +101,7 @@ export default function ContactPage() {
                   referrerPolicy="no-referrer-when-downgrade"
                   className="absolute inset-0 w-full h-full"
                 ></iframe>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                  <h3 className="text-xl font-semibold text-white">Northeast Operations Center</h3>
-                </div>
-              </div>
+             </div>
               <div className="p-6">
                 <ul className="space-y-4">
                   <li className="flex items-start">
@@ -133,6 +130,15 @@ export default function ContactPage() {
                     </div>
                     <a href="mailto:info@radhealthplus.com" className="text-gray-700 hover:text-primary transition-colors">info@radhealthplus.com</a>
                   </li>
+                  <li className="flex items-start">
+                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 p-[5px]">Northeast Operations Center</span>
+                  </li>
                 </ul>
               </div>
             </motion.div>
@@ -154,7 +160,7 @@ export default function ContactPage() {
               <div className="hidden lg:block relative bg-gradient-to-br from-primary/10 to-primary/5">
                 <div className="absolute inset-0 flex items-center justify-center p-12">
                   <div className="text-center">
-                    <div className="text-6xl text-primary/20 mb-6">
+                    <div className="text-6xl text-primary/20 mb-6 flex justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                       </svg>
