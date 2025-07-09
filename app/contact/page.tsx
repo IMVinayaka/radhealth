@@ -2,10 +2,9 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { useState } from 'react';
+ import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navigation from '../components/Navigation';
+import { submitContactForm } from '../services/contactService';
 
 type FormData = {
   is_interested: 'Yes' | 'No';
@@ -46,8 +45,9 @@ export default function ContactPage() {
     setSubmitStatus(null);
 
     try {
-      const response = await axios.post('/api/contact', data);
-      if (response.data.success) {
+    
+      const result = await submitContactForm(data);
+      if (result.success) {
         setSubmitStatus({
           success: true,
           message: 'Thank you for your message! We will get back to you soon.'
