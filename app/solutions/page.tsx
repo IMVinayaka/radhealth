@@ -67,7 +67,7 @@ const ServiceSection = () => {
   return (
     <div className="min-h-screen">
      
-      <AutoScrollSections sectionIds={sectionIds} delay={5000} scrollOffset={80} />
+      <AutoScrollSections sectionIds={sectionIds} delay={2500} scrollOffset={80} />
       
       {/* Enhanced Hero Section with Parallax */}
       <section 

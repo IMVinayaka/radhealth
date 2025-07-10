@@ -19,15 +19,16 @@ interface SubmitApplicationResponse {
   error?: string;
 }
 
-export const searchJobs = async (keyword: string = '', country: string = '', zipcode: string = '', miles: string = '') => {
+export const searchJobs = async (keyword: string = '', state: string = '', zipcode: string = '', miles: string = '') => {
   try {
     // Create URLSearchParams and only append non-empty parameters
     const params = new URLSearchParams();
     
     if (keyword?.trim()) params.append('Searchkeywords', keyword.trim());
-    if (country?.trim()) params.append('country', country.trim());
+    if (state?.trim()) params.append('state', state.trim());
     if (zipcode?.trim()) params.append('Zipcode', zipcode.trim());
     if (miles?.trim()) params.append('WithinMiles', miles.trim());
+    params.append('country', 'USA');
     
     // Always include the Group parameter
     params.append('Group', 'IV - Health Care');
