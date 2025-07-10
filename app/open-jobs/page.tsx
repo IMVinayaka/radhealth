@@ -234,12 +234,12 @@ export default function CareersPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   {/* Job List */}
-                  <div className="lg:col-span-1 space-y-4 max-h-[calc(100vh-20rem)] overflow-y-scroll">
+                  <div className="lg:col-span-1 space-y-4 max-h-[calc(100vh-20rem)]  overflow-y-scroll">
                     {filteredJobs.length > 0 ? (
                       filteredJobs.map((job) => (
                         <motion.div
                           key={job.JobID}
-                          className={`bg-white  rounded-xl shadow-md h-[8rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
+                          className={`bg-white m-2 rounded-xl shadow-md h-[8rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                             }`}
                           whileHover={{ y: -5 }}
                           onClick={() => setSelectedJob(job)}
