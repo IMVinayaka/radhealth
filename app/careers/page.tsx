@@ -230,10 +230,10 @@ const handleSearch = async () => {
   </div>
   
   <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">Location (City or Zip)</label>
+    <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
     <input
       type="text"
-      placeholder="City or zip code"
+      placeholder="Zip code"
       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
       value={location}
       onChange={(e) => setLocation(e.target.value)}
