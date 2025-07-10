@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import AutoScrollSections from '../components/AutoScrollSections';
 
@@ -21,6 +21,7 @@ const healthcareRoles = [
 const sectionIds = ['about-mission'];
 
 export default function AboutUsPage() {
+  const [show,setShow] = useState(false);
   // Parallax effects
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -66,6 +67,15 @@ export default function AboutUsPage() {
                   of those in need. These roles are not just jobs, they are opportunities to make a real impact,
                   to offer comfort and healing, to be the guiding light in someone's darkest hour.
                 </p>
+                <button onClick={() => {
+                  setShow(true);
+                  setTimeout(()=>{
+                 document.getElementById('about-team')?.scrollIntoView({ behavior: 'smooth' });
+                 },300)
+                 
+                 }} className="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors">
+                  Read More
+                </button>
               </div>
             </motion.div>
             <motion.div
@@ -87,7 +97,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Nursing Opportunities */}
-      <section id="about-team" className="py-12 md:py-20 bg-gray-50">
+      <section id="about-team" className={`${show ? 'block' : 'hidden'} py-12 md:py-20 bg-gray-50`}>
         <div className="max-w-6xl mx-auto px-4">
           <motion.div 
             className="text-center max-w-3xl mx-auto mb-12"
