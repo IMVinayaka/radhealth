@@ -49,7 +49,7 @@ export default function Navigation() {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-extrabold text-primary">
-          <Image src={Logo} alt="Logo" width={150} height={10} />
+          <Image className='bg-transparent' src={Logo} alt="Logo" width={150} height={10} />
         </Link>
 
         {/* Desktop Navigation */}
