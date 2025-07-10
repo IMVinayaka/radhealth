@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { fadeUp, float } from '../utils/animations';
+import Link from 'next/link';
 
 export default function Hero() {
   return (
@@ -41,12 +42,12 @@ export default function Hero() {
             className="mt-48 flex flex-col sm:flex-row gap-4 justify-center"
             variants={fadeUp}
           >
-            <a 
+            <Link 
               href="/about-us" 
               className="px-8 py-3 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
               Get Started
-            </a>
+            </Link>
  
           </motion.div>
           
