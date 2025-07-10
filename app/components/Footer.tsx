@@ -40,7 +40,7 @@ export default function Footer() {
               <li><Link href="/solutions" className="text-gray-400 hover:text-white transition-colors">Services</Link></li>
               <li><Link href="/clients" className="text-gray-400 hover:text-white transition-colors">Clients</Link></li>
               <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors">Open Jobs</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li>
+              {/* <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li> */}
             </ul>
           </div>
 
@@ -79,9 +79,9 @@ export default function Footer() {
             <Link href="/privacy-policy" className="text-gray-500 hover:text-white text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-gray-500 hover:text-white text-sm transition-colors">
+            {/* <Link href="/terms" className="text-gray-500 hover:text-white text-sm transition-colors">
               Terms of Service
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

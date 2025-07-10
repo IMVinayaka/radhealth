@@ -78,16 +78,16 @@ export default function AboutUsPage() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen ">
     
       <AutoScrollSections sectionIds={sectionIds} delay={2500} scrollOffset={80} />
       
 
 
       {/* Intro Section */}
-      <section id="about-mission" className="py-12 md:py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section id="about-mission" className=" md:py-20 px-4 py-20  backdrop-blur-sm bg-white/50">
+        <div className="container mx-auto section ">
+          <div className="grid md:grid-cols-2 gap-12 items-center   ">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -126,7 +126,7 @@ export default function AboutUsPage() {
                 src={radhealth2}
                 alt="Healthcare Team"
                 fill
-                className="object-cover"
+                className="object-contain"
               />
             </motion.div>
           </div>
