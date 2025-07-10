@@ -78,12 +78,12 @@ export default function Navigation() {
               )}
             </Link>
           ))}
-          <Link
+          {/* <Link
             href="/contact"
             className="ml-4 px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary-dark transition-colors"
           >
             Get Started
-          </Link>
+          </Link> */}
         </nav>
 
         {/* Mobile menu button */}

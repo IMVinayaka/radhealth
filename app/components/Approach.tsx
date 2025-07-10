@@ -77,32 +77,7 @@ export default function Approach() {
               </motion.div>
             ))}
           </div>
-          
-          <motion.div 
-            className="mt-16"
-            variants={fadeUp}
-          >
-            <a 
-              href="#contact" 
-              className="inline-flex items-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary/90 transition-colors"
-            >
-              Get Started with RadHealth<sup>+</sup>
-              <svg 
-                className="ml-2 w-5 h-5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M14 5l7 7m0 0l-7 7m7-7H3" 
-                />
-              </svg>
-            </a>
-          </motion.div>
+
         </motion.div>
       </div>
     </section>

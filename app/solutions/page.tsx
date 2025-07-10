@@ -9,6 +9,8 @@ import { useScroll, useTransform } from 'framer-motion';
 
 // Import images
 import serviceHero from '../assets/images/radhealth2.png';
+import WhyChooseUs from '../components/NursingOpportunities';
+import Approach from '../components/Approach';
 
 const ServiceSection = () => {
   // Section IDs for auto-scrolling
@@ -65,115 +67,11 @@ const ServiceSection = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-6">
      
       <AutoScrollSections sectionIds={sectionIds} delay={2500} scrollOffset={80} />
-      
-      {/* Enhanced Hero Section with Parallax */}
-      <section 
-        id="solutions-hero"
-        ref={targetRef}
-        className="relative h-screen flex items-center justify-center overflow-hidden"
-      >
-        {/* Animated Background */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"
-          style={{ 
-            scale,
-            y: yBg,
-            opacity,
-          }}
-        >
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-          
-          {/* Floating Elements */}
-          <motion.div 
-            className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm"
-            animate={{
-              y: [0, -20, 0],
-              x: [0, 20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm"
-            animate={{
-              y: [0, 30, 0],
-              x: [0, -20, 0],
-              scale: [1, 0.9, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-          />
-        </motion.div>
+      <Approach/>
 
-        {/* Content */}
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto"
-            style={{ y: yText }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <motion.span 
-                className="inline-block text-primary-extraLight text-lg md:text-xl mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                Our Expertise
-              </motion.span>
-              <motion.h1 
-                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                Healthcare Staffing Services
-              </motion.h1>
-              <motion.p 
-                className="text-lg md:text-xl text-primary-extraLight/90 max-w-3xl mx-auto mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                Delivering exceptional healthcare professionals when and where you need them
-              </motion.p>
-
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Animated Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-        >
-          <span className="text-white text-sm mb-2">Scroll Down</span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
-          </motion.div>
-        </motion.div>
-      </section>
 
       {/* Main Content */}
       <section 

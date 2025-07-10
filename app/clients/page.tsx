@@ -30,17 +30,13 @@ const ClientCard = ({ name, delay, index }: { name: string; delay: number; index
       whileHover={{ y: -5, boxShadow: '0 10px 30px -10px rgba(0, 140, 149, 0.2)' }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="p-6 sm:p-8 relative z-10 h-full flex flex-col">
+      <div className="p-3 sm:p-6 relative z-10 h-full flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {name.split(' - ')[0]}
+            <h3 className="text-md font-[500] text-gray-900 dark:text-white">
+              {name}
             </h3>
-            {name.includes(' - ') && (
-              <p className="mt-1 text-gray-600 dark:text-gray-300 text-sm">
-                {name.split(' - ')[1]}
-              </p>
-            )}
+            
           </div>
         </div>
         <motion.div 
@@ -100,102 +96,24 @@ export default function ClientsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen  section bg-white/50 backdrop-blur-sm py-20" >
       <AutoScrollSections sectionIds={sectionIds} delay={2500} scrollOffset={80} />
       
-      <section id="clients-hero" className="relative h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-4 sm:px-6 lg:px-8" ref={targetRef}>
-        {/* Background with parallax effect */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"
-          style={{ 
-            scale,
-            y: yBg,
-            opacity,
-          }}
-        >
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-          
-          {/* Floating Elements */}
-          <motion.div 
-            className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm"
-            animate={{
-              y: [0, -20, 0],
-              x: [0, 20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm"
-            animate={{
-              y: [0, 30, 0],
-              x: [0, -20, 0],
-              scale: [1, 0.9, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-          />
-        </motion.div>
 
-        {/* Content */}
-        <div className="max-w-7xl mx-auto relative z-10 text-center">
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold text-white mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Our Valued Clients
-          </motion.h1>
-          <motion.p 
-            className="text-xl text-white/90 max-w-3xl mx-auto mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Partnering with top healthcare facilities to deliver exceptional staffing solutions
-          </motion.p>
-        </div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-        >
-          <span className="text-white text-sm mb-2">Scroll Down</span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      <section id="clients-featured" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="clients-featured" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 ">
         <div className="max-w-7xl mx-auto">
           <motion.h2 
-            className="text-3xl font-bold text-center mb-12"
+            className="text-3xl font-semibold text-center mb-12 text-[#0a3951]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            Featured Clients
+            Our Valued Clients
+            <div className="h-1.5 max-w-[10rem] bg-highlight mt-3 mx-auto mb-8"></div>
           </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {clients.map((client, index) => (
               <ClientCard 
                 key={client.name} 

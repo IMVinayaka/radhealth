@@ -9,12 +9,10 @@ import { getStatesByCountry } from '../services/commonServices';
 
 // Mock data structure to match the original design
 interface MockJob {
-  id: number;
-  title: string;
-  postedDate: string;
-  jobId: string;
+  JobID: number;
+  JobTitle: string;
+  JobPosted: string;
   location: string;
-  type: string;
   salary: string;
   description: string;
   Zip: string;
@@ -57,19 +55,15 @@ useEffect(() => {
   fetchStates();
 }, []);
 
-  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
 
   // Convert API jobs to mock job format
   const mockJobs: MockJob[] = jobs.map((job, index) => ({
-    id: index + 1,
-    title: job.JobTitle,
-    postedDate: job.JobPosted,
-    jobId: job.JobID,
+    JobID: Number(job.JobID),  // Convert string to number
+    JobTitle: job.JobTitle,
+    JobPosted: job.JobPosted,
+    jobId: job.JobID,  // This can remain as string if needed
     location: job.City && job.JobState ? `${job.City}, ${job.JobState}` : 'Various Locations',
-    type: job.JobType,
     salary: job.Salary,
     description: job.JobDescription || 'Job description not available. Please apply for more details.',
     Zip: job.Zip,
@@ -102,18 +96,13 @@ const handleSearch = async () => {
   // First try to filter existing jobs
   const localResults = mockJobs.filter(job => {
     const matchesSearch = searchTerm === '' || 
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.JobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
       job.description.toLowerCase().includes(searchTerm.toLowerCase());
       
     const matchesLocation = location === '' || 
-      job.Zip.includes(location) || 
-      job.City.toLowerCase().includes(location.toLowerCase()) || 
-      job.location.toLowerCase().includes(location.toLowerCase());
+      job.Zip?.includes(location)
       
-    const matchesState = selectedState === '' || 
-      job.State.toLowerCase() === selectedState.toLowerCase();
-
-    return matchesSearch && matchesLocation && matchesState;
+    return matchesSearch && matchesLocation;
   });
 
   // If no local results found or using location/state/miles filter, try API search
@@ -129,86 +118,18 @@ const handleSearch = async () => {
       setLoading(false);
     }
   }
+  setSelectedJob(null);
 };
   const filteredJobs = mockJobs.filter(job => {
-    if (!searchPerformed && !initialLoad) return false;
-    
-    const matchesSearch = searchTerm === '' || 
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-    const matchesLocation = location === '' || 
-      job.State.toLowerCase().includes(location.toLowerCase()) || 
-      job.Zip.includes(location) || 
-      job.City.toLowerCase().includes(location.toLowerCase()) || 
-      job.location.toLowerCase().includes(location.toLowerCase());
-      
-    return matchesSearch && matchesLocation;
+
+    return job;
   });
 
   const sectionIds = ['careers-search'];
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen  section bg-white/50 backdrop-blur-sm py-20">
       <AutoScrollSections sectionIds={sectionIds} delay={2500} scrollOffset={80} />
-      {/* Hero Section */}
-      <section id="careers-hero" className="relative h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-4 sm:px-6 lg:px-8" ref={targetRef}>
-        {/* Background with parallax effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark"
-          style={{
-            scale,
-            y: yBg,
-            opacity,
-          }}
-        >
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
 
-          {/* Floating Elements */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm"
-            animate={{
-              y: [0, -20, 0],
-              x: [0, 20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm"
-            animate={{
-              y: [0, 30, 0],
-              x: [0, -20, 0],
-              scale: [1, 0.9, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-          />
-        </motion.div>
-
-        {/* Content */}
-        <div className="max-w-7xl mx-auto relative z-10 text-center">
-          <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6"
-            style={{ y: yText }}
-          >
-            Open Jobs
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8"
-            style={{ y: yText }}
-          >
-            Build your future with us and be part of something extraordinary
-          </motion.p>
-        </div>
-      </section>
 
       {/* Search Section */}
       <section id='careers-search' className="py-12 mt-20">
@@ -289,11 +210,11 @@ const handleSearch = async () => {
       </section>
 
       {loading ? (
-        <div className="min-h-[20vh] bg-gray-50 flex items-center justify-center">
+        <div className="min-h-[20vh]  flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <section className="py-12 bg-gray-50">
+        <section className="py-12 ">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="flex justify-between items-center mb-8">
@@ -312,12 +233,12 @@ const handleSearch = async () => {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Job List */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-1 space-y-6">
                   {filteredJobs.length > 0 ? (
                     filteredJobs.map((job) => (
                       <motion.div
-                        key={job.id}
-                        className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.id === job.id ? 'border-primary bg-primary-light/20' : ''
+                        key={job.JobID}
+                        className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                           }`}
                         whileHover={{ y: -5 }}
                         onClick={() => setSelectedJob(job)}
@@ -325,7 +246,7 @@ const handleSearch = async () => {
                         <div className="p-6">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-xl font-bold text-gray-900 mb-1">{job.title}</h3>
+                              <h3 className="text-xl font-bold text-gray-900 mb-1">{job.JobTitle}</h3>
                               <p className="text-primary font-medium mb-3">{job.location}</p>
                             </div>
                             {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
@@ -338,7 +259,7 @@ const handleSearch = async () => {
                               <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
-                              Posted {new Date(job.postedDate).toLocaleDateString()}
+                              Posted {new Date(job.JobPosted).toLocaleDateString()}
                             </div>
                             {job.salary && (
                               <div className="flex items-center">
@@ -350,10 +271,10 @@ const handleSearch = async () => {
                             )}
                           </div>
 
-                          <div
-                            className="text-gray-700 mb-4 prose max-w-none"
+                          {/* <div
+                            className="text-gray-700 mb-4 truncate prose max-w-none"
                             dangerouslySetInnerHTML={{ __html: job.description || 'No description available' }}
-                          />
+                          /> */}
 
                           <button
                             className="text-primary font-medium hover:text-primary-dark transition-colors"
@@ -380,11 +301,11 @@ const handleSearch = async () => {
                 </div>
 
                 {/* Job Details */}
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-2">
                   {selectedJob ? (
                     <div className="sticky top-6 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                       <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
-                        <h2 className="text-2xl font-bold mb-2">{selectedJob.title}</h2>
+                        <h2 className="text-2xl font-bold mb-2">{selectedJob.JobTitle}</h2>
                         <p className="text-primary-extraLight">{selectedJob.location}</p>
                       </div>
                       <div className="p-6">
@@ -402,7 +323,7 @@ const handleSearch = async () => {
                           <div>
                             <p className="text-sm text-gray-500">Posted</p>
                             <p className="font-medium">
-                              {new Date(selectedJob.postedDate).toLocaleDateString()}
+                              {new Date(selectedJob.JobPosted).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
@@ -410,7 +331,7 @@ const handleSearch = async () => {
                         <div className="mb-6">
                           <h3 className="text-lg font-bold mb-3">Job Description</h3>
                           <div
-                            className="text-gray-700 mb-4 prose max-w-none"
+                            className="text-gray-700 mb-4 truncate prose max-w-none"
                             dangerouslySetInnerHTML={{ __html: selectedJob.description || 'No description available' }}
                           />
                         </div>
@@ -449,8 +370,8 @@ const handleSearch = async () => {
       <JobApplicationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        jobTitle={selectedJob?.title || ''}
-        jobId={selectedJob?.jobId || ''}
+        jobTitle={selectedJob?.JobTitle || ''}
+        jobId={selectedJob?.JobID || ''}
       />
     </div>
   );

@@ -67,87 +67,11 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      
-      
-      {/* Hero Section */}
-  
 
-      {/* Locations Grid */}
-      <section className="py-16 bg-white mt-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Locations</h2>
-            <div className="w-20 h-1 bg-primary mx-auto"></div>
-          </div>
-          
-          <div className="mx-auto w-[500px] grid grid-cols-1">
-      
-
-            {/* Operating From */}
-            <motion.div 
-              className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <div className="h-64 bg-gray-100 relative">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3041.5101890251512!2d-74.58806872349624!3d40.33102696085016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3ddfa44226b8f%3A0x4252cdebba2c7d7d!2s101%20Morgan%20Ln%20%23304%2C%20Plainsboro%20Township%2C%20NJ%2008536%2C%20USA!5e0!3m2!1sen!2sin!4v1751980127826!5m2!1sen!2sin" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="absolute inset-0 w-full h-full"
-                ></iframe>
-             </div>
-              <div className="p-6">
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">101 Morgan Lane, Suite # 304<br/>Plainsboro, NJ 08536</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                      </svg>
-                    </div>
-                    <a href="tel:9549382800" className="text-gray-700 hover:text-primary transition-colors">954-938-2800</a>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
-                    </div>
-                    <a href="mailto:info@radhealthplus.com" className="text-gray-700 hover:text-primary transition-colors">info@radhealthplus.com</a>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="bg-primary/10 p-2 rounded-lg mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 p-[5px]">Northeast Operations Center</span>
-                  </li>
-                </ul>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* Contact Form Section */}
       <section className="py-16 bg-gray-50">
+      <h2 className="text-3xl text-center my-12 font-bold text-gray-900">Contact Us</h2>
         <div className="container mx-auto px-4">
           <motion.div 
             className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto"

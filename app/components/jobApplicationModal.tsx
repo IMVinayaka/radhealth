@@ -14,7 +14,7 @@ interface JobApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   jobTitle: string;
-  jobId: string;
+  jobId:  string | number;
 }
 
 interface Certification {
@@ -136,7 +136,7 @@ export default function JobApplicationModal({
       formDataToSend.append('emailID', formData.email);
       formDataToSend.append('MobileNumber', formData.mobile);
       formDataToSend.append('Message', formData.message || '');
-      formDataToSend.append('JobID', jobId);
+      formDataToSend.append('JobID', jobId.toString());
       
       if (formData.resume) {
         formDataToSend.append('FILE', formData.resume);
@@ -156,7 +156,7 @@ export default function JobApplicationModal({
           .map(async (cert) => {
             const certFormData = new FormData();
             certFormData.append('emailID', formData.email);
-            certFormData.append('JobID', jobId);
+            certFormData.append('JobID', jobId.toString());
             certFormData.append('CertificateName', cert.name);
             certFormData.append('FILE', cert.file as Blob);
             

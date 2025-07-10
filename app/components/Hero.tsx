@@ -38,44 +38,19 @@ export default function Hero() {
           </motion.h1>
           
           <motion.div 
-            className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
+            className="mt-48 flex flex-col sm:flex-row gap-4 justify-center"
             variants={fadeUp}
           >
             <a 
-              href="#contact" 
+              href="/about-us" 
               className="px-8 py-3 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
               Get Started
             </a>
-            <a 
-              href="#services" 
-              className="px-8 py-3 border-2 border-white text-white font-bold rounded-full hover:bg-white/10 transition-colors"
-            >
-              Our Services
-            </a>
+ 
           </motion.div>
           
-          <motion.div 
-            className="mt-16"
-            variants={float}
-            initial="initial"
-            animate="animate"
-          >
-            <svg 
-              className="w-8 h-8 mx-auto text-white" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M19 14l-7 7m0 0l-7-7m7 7V3" 
-              />
-            </svg>
-          </motion.div>
+
         </motion.div>
       </div>
     </section>
