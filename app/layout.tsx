@@ -11,7 +11,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'RadHealth+ – Healthcare Staffing Excellence',
+  title: 'RadHealth<sup>+</sup> – Healthcare Staffing Excellence',
   description: 'Bridging talent and opportunities in healthcare staffing',
 };
 

@@ -35,7 +35,7 @@ export default function Approach() {
             className="text-3xl md:text-4xl font-bold text-text-dark mb-6"
             variants={fadeUp}
           >
-            RadHealth+'s Comprehensive
+            RadHealth<sup>+</sup>'s Comprehensive
             <span className="block text-primary mt-2">Healthcare Staffing Solutions</span>
           </motion.h2>
           
@@ -48,7 +48,7 @@ export default function Approach() {
             className="text-lg text-text-muted max-w-4xl mx-auto mb-16"
             variants={fadeUp}
           >
-            At RadHealth+, we're redefining healthcare staffing by connecting exceptional 
+            At RadHealth<sup>+</sup>, we're redefining healthcare staffing by connecting exceptional 
             talent with healthcare organizations that need them most. Our approach combines 
             cutting-edge technology with personalized service to deliver staffing solutions 
             that make a real difference.
@@ -86,7 +86,7 @@ export default function Approach() {
               href="#contact" 
               className="inline-flex items-center px-8 py-3 bg-primary text-white font-medium rounded-full hover:bg-primary/90 transition-colors"
             >
-              Get Started with RadHealth+
+              Get Started with RadHealth<sup>+</sup>
               <svg 
                 className="ml-2 w-5 h-5" 
                 fill="none" 

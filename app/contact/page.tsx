@@ -321,7 +321,7 @@ export default function ContactPage() {
                         </div>
                         <div className="ml-3">
                           <label htmlFor="consent" className="text-sm text-gray-600">
-                            I Consent To Receive SMS Messages From RadHealthPlus. Related To Job-Related Offers.
+                            I Consent To Receive SMS Messages From RadHealth<sup>+</sup>. Related To Job-Related Offers.
                             Message And Data Rates May Apply. Message Frequency Varies. Reply HELP For Help Or STOP To
                             Cancel. By Signing Up, I Agree To The Privacy Policy
                             Located At radhealthplus.com/privacy-policy.

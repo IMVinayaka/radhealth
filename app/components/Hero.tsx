@@ -36,12 +36,6 @@ export default function Hero() {
           >
             Your Partner in Healthcare Workforce Excellence
           </motion.h1>
-          {/* <motion.p 
-            className="text-lg sm:text-xl font-medium bg-white/10 text-justify  tracking-wide max-w-4xl mx-auto mb-8"
-            variants={fadeUp}
-          >
-            RadHealth+ empowers hospitals, health systems, and government healthcare programs with top-tier clinical and non-clinical professionals—rapidly deployed, fully credentialed, and ready to make an impact.
-          </motion.p> */}
           
           <motion.div 
             className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"

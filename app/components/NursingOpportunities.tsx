@@ -38,7 +38,7 @@ export default function WhyChooseUs() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-text-dark mb-4">
-            Why Choose RadHealth+?
+            Why Choose RadHealth<sup>+</sup>
           </h2>
           <div className="h-1.5 w-20 bg-highlight mx-auto mb-8"></div>
           <p className="text-lg text-text-muted max-w-3xl mx-auto">
