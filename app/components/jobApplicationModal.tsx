@@ -303,20 +303,7 @@ export default function JobApplicationModal({
               </div>
             </div>
 
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Cover Letter (Optional)
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
-                disabled={isSubmitting}
-              />
-            </div>
+         
 
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -386,7 +373,20 @@ export default function JobApplicationModal({
                 ))}
               </div>
             </div>
-
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                Cover Letter (Optional)
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                disabled={isSubmitting}
+              />
+            </div>
             <div className="pt-4 border-t border-gray-200">
               <button
                 type="submit"
