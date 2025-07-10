@@ -198,13 +198,13 @@ export default function JobApplicationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="">
       <motion.div
         ref={modalRef}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-white p-6 rounded-xl shadow-lg"
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">

@@ -40,3 +40,15 @@
     @apply bg-primary/70;
   }
 }
+
+.swiper-button-prev, .swiper-button-next{
+  /* @apply bg-primary/50 rounded-full; */
+  color: #008C95 !important;
+}
+
+.swiper-wrapper{
+  margin: 2rem !important;
+}
+.swiper-pagination-bullet-active{
+  background-color: #008C95 !important;
+}

@@ -3,7 +3,6 @@ const API_BASE_URL = 'https://intranet.radgov.com/RadgovWebsiteAPI/API';
 export interface Job {
   JobID: string;
   JobTitle: string;
-  JobState: string;
   JobDescription: string;
   JobPosted: string;
   JobType: string;
