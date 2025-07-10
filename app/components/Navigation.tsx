@@ -35,10 +35,10 @@ export default function Navigation() {
   };
 
   const isActive = (href: string) => {
-    if (href.startsWith('/#')) {
-      return pathname === '/' || pathname === '';
+    if (href === '/') {
+      return pathname === '/';
     }
-    return pathname === href || pathname.startsWith(href);
+    return pathname.includes(href);
   };
 
   return (
