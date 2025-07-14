@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { fadeUp, float } from '../utils/animations';
+import { fadeUp } from '../utils/animations';
 import Link from 'next/link';
+// import Link from 'next/link';
 
 export default function Hero() {
   return (
@@ -16,7 +17,7 @@ export default function Hero() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="https://v.ftcdn.net/12/76/07/32/700_F_1276073215_VtqPBvqMUxgbKmTUBTstOo17ewrYrAkM_ST.mp4" type="video/mp4" />
+          <source src={'/hero.mp4'} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         {/* Gradient Overlay */}

@@ -1,9 +1,5 @@
 'use client';
-import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import Approach from './components/Approach';
-import NursingOpportunities from './components/NursingOpportunities';
-import Contact from './contact/page';
 import AutoScrollSections from './components/AutoScrollSections';
 
 export default function Home() {
@@ -14,7 +10,7 @@ export default function Home() {
     <main className="min-h-screen">
       <AutoScrollSections 
         sectionIds={sectionIds} 
-        delay={5000} 
+        delay={7000} 
         scrollOffset={80} 
       />
       <div className="pt-16">
