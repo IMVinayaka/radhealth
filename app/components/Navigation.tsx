@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
-const Logo = '/rad-health-logo-v1.png';
+const Logo = '/assets/images/rad-health-logo-v1.png';
 
 const navigation = [
   { name: 'Home', href: '/' },

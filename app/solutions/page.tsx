@@ -8,7 +8,7 @@ import { useRef } from 'react';
 import { useScroll, useTransform } from 'framer-motion';
 
 // Import images
-const serviceHero = '/radhealth2.png';
+const serviceHero = '/assets/images/radhealth2.png';
 import WhyChooseUs from '../components/NursingOpportunities';
 import Approach from '../components/Approach';
 
