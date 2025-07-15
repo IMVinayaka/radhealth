@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
-const repoName = 'radhealth';
+const repoName = 'radhealthplus';
 const basePath = isProd ? `/${repoName}` : '';
 
 const nextConfig = {
