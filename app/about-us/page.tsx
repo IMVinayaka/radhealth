@@ -7,8 +7,8 @@ import AutoScrollSections from '../components/AutoScrollSections';
 
 
 
-import radhealth2 from '../assets/images/radhealth2.png';
-import radhealth3 from '../assets/images/radhealth3.png';
+const radhealth2 = '/assets/images/radhealth2.png';
+const radhealth3 = '/assets/images/radhealth3.png';
 
 const healthcareRoles = [
   { title: 'RN', description: 'Registered Nurse Medical Surgical/Tele/OR/ER/PCU/ICU' },
