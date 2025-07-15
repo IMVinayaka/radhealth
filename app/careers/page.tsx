@@ -4,26 +4,27 @@ import React, { useRef } from 'react'
 import { motion, useScroll } from 'framer-motion';
 
 // Import all icons
-const cathLabIcon = '/rad_health_icons/cath_lab.svg';
-const cotaIcon = '/rad_health_icons/COTA.svg';
-const clsIcon = '/rad_health_icons/CLS.svg';
-const ctTechIcon = '/rad_health_icons/CT_Tech.svg';
-const echoTechIcon = '/rad_health_icons/Echo_Tech.svg';
-const irIcon = '/rad_health_icons/IR.svg';
-const mltIcon = '/rad_health_icons/MLT.svg';
-const mtIcon = '/rad_health_icons/MT.svg';
-const mammographyTechIcon = '/rad_health_icons/Mammography_Tech.svg';
-const mriTechIcon = '/rad_health_icons/MRI_Tech.svg';
-const nuclearMedTechIcon = '/rad_health_icons/Nuclear_MedTech.svg';
-const occupationalTherapistIcon = '/rad_health_icons/Occupational_Therapist.svg';
-const pharmacistPharmacyTechIcon = '/rad_health_icons/Pharmacist_PharmacyTech.svg';
-const phlebotomistsIcon = '/rad_health_icons/Phlebotomists.svg';
-const ptIcon = '/rad_health_icons/PT.svg';
-const ptaIcon = '/rad_health_icons/PTA.svg';
-const radiationTherapistIcon = '/rad_health_icons/Radiation_Therapist.svg';
-const radiologyTechnicianIcon = '/rad_health_icons/Radiology_Technician.svg';
-const rrtIcon = '/rad_health_icons/RRT.svg';
-const ultrasoundTechIcon = '/rad_health_icons/Ultrasound_Tech.svg';
+import cathLabIcon from '../assets/images/rad_health_icons/cath_lab.svg';
+import cotaIcon from '../assets/images/rad_health_icons/COTA.svg';
+import clsIcon from '../assets/images/rad_health_icons/CLS.svg';
+import ctTechIcon from '../assets/images/rad_health_icons/CT_Tech.svg';
+import echoTechIcon from '../assets/images/rad_health_icons/Echo_Tech.svg';
+import irIcon from '../assets/images/rad_health_icons/IR.svg';
+import mltIcon from '../assets/images/rad_health_icons/MLT.svg';
+import mtIcon from '../assets/images/rad_health_icons/MT.svg';
+import mammographyTechIcon from '../assets/images/rad_health_icons/Mammography_Tech.svg';
+import mriTechIcon from '../assets/images/rad_health_icons/MRI_Tech.svg';
+import nuclearMedTechIcon from '../assets/images/rad_health_icons/Nuclear_MedTech.svg';
+import occupationalTherapistIcon from '../assets/images/rad_health_icons/Occupational_Therapist.svg';
+import pharmacistPharmacyTechIcon from '../assets/images/rad_health_icons/Pharmacist_PharmacyTech.svg';
+import phlebotomistsIcon from '../assets/images/rad_health_icons/Phlebotomists.svg';
+import ptIcon from '../assets/images/rad_health_icons/PT.svg';
+import ptaIcon from '../assets/images/rad_health_icons/PTA.svg';
+import radiationTherapistIcon from '../assets/images/rad_health_icons/Radiation_Therapist.svg';
+import radiologyTechnicianIcon from '../assets/images/rad_health_icons/Radiology_Technician.svg';
+import rrtIcon from '../assets/images/rad_health_icons/RRT.svg';
+// import slpIcon from '../assets/images/rad_health_icons/SLP.svg';
+import ultrasoundTechIcon from '../assets/images/rad_health_icons/Ultrasound_Tech.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 
