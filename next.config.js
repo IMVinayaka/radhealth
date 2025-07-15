@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const repoName = 'radhealthplus';
-const basePath = isProd ? `/${repoName}` : '';
+const basePath = isProd ? '' : '';
 
 const nextConfig = {
   // Only enable output: 'export' in production
   ...(isProd ? { output: 'export' } : {}),
-  ...(isProd ? { basePath } : {}),
-  ...(isProd ? { assetPrefix: `${basePath}/` } : {}),
+  // Remove basePath since we're using custom domain
+  // ...(isProd ? { basePath } : {}),
+  // Use empty assetPrefix since we're using custom domain
+  ...(isProd ? { assetPrefix: '' } : {}),
   reactStrictMode: true,
   images: {
     unoptimized: isProd, // Only unoptimize in production
