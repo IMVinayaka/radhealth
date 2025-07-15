@@ -9,7 +9,6 @@ import { useScroll, useTransform } from 'framer-motion';
 
 // Import images
 import serviceHero from '../assets/images/radhealth2.png';
-import WhyChooseUs from '../components/NursingOpportunities';
 import Approach from '../components/Approach';
 
 const ServiceSection = () => {
