@@ -204,9 +204,9 @@ export default function JobApplicationModal({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white p-6 rounded-xl shadow-lg"
+        className="bg-white lg:p-6 p-2 rounded-xl shadow-lg"
       >
-        <div className="p-6">
+        <div className="lg:p-6 p-2">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-900">Apply for {jobTitle}</h2>
             <button
