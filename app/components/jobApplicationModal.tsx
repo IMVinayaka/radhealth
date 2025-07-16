@@ -409,7 +409,6 @@ export default function JobApplicationModal({
               <p className="mt-3 text-xs text-gray-500 text-center">
                 By submitting this application, you agree to our{' '}
                 <a href="/privacy-policy" className="text-primary hover:underline">privacy policy</a> and{' '}
-                <a href="/terms" className="text-primary hover:underline">terms of service</a>.
               </p>
             </div>
           </form>
