@@ -125,13 +125,6 @@ export default function Navigation() {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href="/contact"
-                onClick={toggleMenu}
-                className="block w-full text-center py-2 px-4 bg-primary text-white rounded-md font-medium hover:bg-primary-dark transition-colors"
-              >
-                Get Started
-              </Link>
             </div>
           </motion.div>
         )}
