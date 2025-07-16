@@ -33,7 +33,7 @@ export default function Hero() {
           className="max-w-5xl mx-auto"
         >
           <motion.h1 
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-primary mb-6"
+            className=" hero_heading text-4xl sm:text-6xl lg:text-7xl font-extrabold text-primary mb-6"
             variants={fadeUp}
           >
             Your Partner in Healthcare Workforce Excellence

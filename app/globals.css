@@ -52,3 +52,7 @@
 .swiper-pagination-bullet-active{
   background-color: #008C95 !important;
 }
+
+.hero_heading{
+  -webkit-text-stroke: 1px #fff;
+}

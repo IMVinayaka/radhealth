@@ -242,7 +242,11 @@ export default function CareersPage() {
                           className={`bg-white m-2 rounded-xl shadow-md h-[8rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                             }`}
                           whileHover={{ y: -5 }}
-                          onClick={() => setSelectedJob(job)}
+                          onClick={() => {setSelectedJob(job);
+                            setTimeout(()=>{
+                              document.getElementById('job_details')?.scrollIntoView({ behavior: 'smooth' ,block:'nearest'});
+                              },10)
+                          }}
                         >
                           <div className="py-4 px-3">
                             <div className="flex justify-between items-start">
@@ -302,7 +306,7 @@ export default function CareersPage() {
                   </div>
 
                   {/* Job Details */}
-                  <div className="lg:col-span-2">
+                  <div id='job_details' className="lg:col-span-2">
                     {selectedJob ? (
                       <div className="sticky top-6 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                         <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
