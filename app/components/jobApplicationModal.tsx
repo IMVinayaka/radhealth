@@ -204,7 +204,7 @@ export default function JobApplicationModal({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white lg:p-6 p-2 rounded-xl shadow-lg"
+        className="bg-white lg:p-6 p-2 w-[100%] rounded-xl shadow-lg"
       >
         <div className="lg:p-6 p-2">
           <div className="flex justify-between items-center mb-4">
