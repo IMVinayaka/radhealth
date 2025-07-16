@@ -21,7 +21,7 @@ export default function Hero() {
           Your browser does not support the video tag.
         </video>
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-light/20 to-primary-extraLight/90"></div>
+        <div className="absolute inset-0  "></div>
       </div>
 
       {/* Content */}
