@@ -13,7 +13,7 @@ const navigation = [
   { name: 'About', href: '/about-us' },
   { name: 'Services', href: '/solutions' },
   { name: 'Clients', href: '/clients' },
-  { name: 'Careers', href: '/careers' },
+  { name: 'Careers', href: '/open-jobs' },
 ];
 
 export default function Navigation() {

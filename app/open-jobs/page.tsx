@@ -248,11 +248,11 @@ export default function CareersPage() {
                               },10)
                           }}
                         >
-                          <div className="py-4 px-3">
+                          <div className="py-3 flex items-center justify-start px-3">
                             <div className="flex justify-between items-start overflow-hidden truncate ellipsis">
-                              <div className='flex items-center gap-3'>
-                                <h3   title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 mb-1">{job.JobTitle},</h3>
-                                <p title={job.location} className="text-primary ellipsis truncate text-sm font-[400] mb-2">{job.location}</p>
+                              <div className='flex items-center justify-start gap-3'>
+                                <h3   title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 ">{job.JobTitle},</h3>
+                                <h4 title={job.location} className="text-primary ellipsis truncate text-sm font-[400] ">{job.location}</h4>
                               </div>
                               {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
                       {job.type}

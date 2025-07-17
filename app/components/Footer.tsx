@@ -39,7 +39,7 @@ export default function Footer() {
               <li><Link href="/about-us" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/solutions" className="text-gray-400 hover:text-white transition-colors">Services</Link></li>
               <li><Link href="/clients" className="text-gray-400 hover:text-white transition-colors">Clients</Link></li>
-              <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors">Open Jobs</Link></li>
+              <li><Link href="/open-jobs" className="text-gray-400 hover:text-white transition-colors">Open Jobs</Link></li>
               {/* <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li> */}
             </ul>
           </div>
@@ -51,8 +51,8 @@ export default function Footer() {
               <li className="flex items-start">
                 <FaMapMarkerAlt className="mt-1 mr-3 text-primary" />
                 <div>
-                  <p>6750 N. Andrews Ave., Suite 200</p>
-                  <p>Fort Lauderdale, FL 33309</p>
+                  <p> 101 Morgan Lane, Suite # 304 Plainsboro, NJ 08536</p>
+               
                 </div>
               </li>
               <li className="flex items-center">
@@ -71,8 +71,9 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-800 pt-3 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
+          <p className='text-white flex items-center justify-start mb-2'>   <FaMapMarkerAlt className=" mr-1 text-primary" /> 6750 N. Andrews Ave., Suite 200 Fort Lauderdale, FL 33309</p>
             &copy; {currentYear} RadHealth<sup>+</sup>. All rights reserved.
           </p>
           <div className="flex space-x-6">
