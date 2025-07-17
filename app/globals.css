@@ -56,3 +56,16 @@
 .hero_heading{
   -webkit-text-stroke: 1px #fff;
 }
+
+:root{
+  --vh: 1vh;
+  font-size: 100%;
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) and (max-width: 1599.98px) {
+  /* Your CSS here for xl screens */
+  :root {
+    font-size: 70% !important;
+  }
+}

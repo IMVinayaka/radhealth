@@ -22,6 +22,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable}`}>
+      <head>
+        <link rel="icon" href="/rad-health-logo-v1.png" type="image/png" />
+      </head>
       <body className="min-h-screen bg-gradient-to-br from-primary-light to-primary-extraLight bg-fixed">
         <Navigation />
         <div className="min-h-screen snap-y snap-mandatory overflow-y-auto">

@@ -232,14 +232,14 @@ export default function CareersPage() {
                   </div> */}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 2xl:gap-8">
                   {/* Job List */}
-                  <div className="lg:col-span-1 space-y-4 max-h-[calc(100vh-20rem)]  overflow-y-scroll">
+                  <div className="xl:col-span-1 space-y-4 lg:max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
                     {filteredJobs.length > 0 ? (
                       filteredJobs.map((job) => (
                         <motion.div
                           key={job.JobID}
-                          className={`bg-white m-2 rounded-xl shadow-md h-[5rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
+                          className={`bg-white m-2 rounded-xl shadow-md  border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                             }`}
                           whileHover={{ y: -5 }}
                           onClick={() => {setSelectedJob(job);
@@ -249,9 +249,9 @@ export default function CareersPage() {
                           }}
                         >
                           <div className="py-4 px-3">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 title={job.JobTitle} className="text-md ellipsis truncate font-[500] text-gray-900 mb-1">{job.JobTitle}</h3>
+                            <div className="flex justify-between items-start overflow-hidden truncate ellipsis">
+                              <div className='flex items-center gap-3'>
+                                <h3   title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 mb-1">{job.JobTitle},</h3>
                                 <p title={job.location} className="text-primary ellipsis truncate text-sm font-[400] mb-2">{job.location}</p>
                               </div>
                               {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
@@ -306,7 +306,7 @@ export default function CareersPage() {
                   </div>
 
                   {/* Job Details */}
-                  <div id='job_details' className="lg:col-span-2">
+                  <div id='job_details' className="xl:col-span-2">
                     {selectedJob ? (
                       <div className="sticky top-6 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                         <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
@@ -333,7 +333,7 @@ export default function CareersPage() {
                             </div>
                           </div>
 
-                          <div className="mb-6  max-h-[calc(100vh-38.9rem)] overflow-y-scroll">
+                          <div className="mb-6 lg:max-h-[calc(100vh-38.9rem)] overflow-y-auto pr-2">
                             <h3 className="text-lg font-bold mb-3">Job Description</h3>
                             <div
                               className="text-gray-700 mb-4 truncate prose max-w-none"
