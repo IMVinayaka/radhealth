@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable}`}>
       <head>
-        <link rel="icon" href="/" type="image/png" />
+        <link rel="icon" href="/favicon.ico" type="image/png" />
       </head>
       <body className="min-h-screen bg-gradient-to-br from-primary-light to-primary-extraLight bg-fixed">
         <Navigation />
