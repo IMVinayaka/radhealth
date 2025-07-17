@@ -5,7 +5,7 @@ import { FaLinkedin, FaTwitter, FaFacebook, FaMapMarkerAlt, FaPhone, FaEnvelope,
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -52,7 +52,7 @@ export default function Footer() {
                 <FaMapMarkerAlt className="mt-1 mr-3 text-primary" />
                 <div>
                   <p> 101 Morgan Lane, Suite # 304 Plainsboro, NJ 08536</p>
-               
+
                 </div>
               </li>
               <li className="flex items-center">
@@ -63,7 +63,7 @@ export default function Footer() {
                 <FaEnvelope className="mr-3 text-primary" />
                 <a href="mailto:info@radhealthplus.com" className="hover:text-primary transition-colors">info@radhealthplus.com</a>
               </li>
-   
+
             </ul>
           </div>
 
@@ -73,7 +73,13 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-800 pt-3 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-          <p className='text-white flex items-center justify-start mb-2'>   <FaMapMarkerAlt className=" mr-1 text-primary" /> 6750 N. Andrews Ave., Suite 200 Fort Lauderdale, FL 33309</p>
+            <p className='text-white mb-3 '>
+              Registered Office
+              <br />
+              <span className='flex items-center justify-start mt-1'>
+               6750 N. Andrews Ave., Suite 200 Fort Lauderdale, FL 33309
+              </span>
+            </p>
             &copy; {currentYear} RadHealth<sup>+</sup>. All rights reserved.
           </p>
           <div className="flex space-x-6">
