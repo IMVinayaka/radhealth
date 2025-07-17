@@ -222,14 +222,14 @@ export default function CareersPage() {
                   <h2 className="text-2xl font-bold text-gray-900">
                     {filteredJobs.length} {filteredJobs.length === 1 ? 'Job' : 'Jobs'} Found
                   </h2>
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <span className="text-sm text-gray-600 mr-2">Sort by:</span>
                     <select className="border-0 bg-transparent text-primary font-medium focus:ring-0 focus:ring-offset-0">
                       <option>Most Recent</option>
                       <option>Relevance</option>
                       <option>Location</option>
                     </select>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -239,7 +239,7 @@ export default function CareersPage() {
                       filteredJobs.map((job) => (
                         <motion.div
                           key={job.JobID}
-                          className={`bg-white m-2 rounded-xl shadow-md h-[8rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
+                          className={`bg-white m-2 rounded-xl shadow-md h-[5rem] border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                             }`}
                           whileHover={{ y: -5 }}
                           onClick={() => {setSelectedJob(job);
@@ -261,10 +261,10 @@ export default function CareersPage() {
 
                             <div className="flex items-center text-sm text-gray-500 mb-2">
                               <div className="flex text-xs items-center mr-6">
-                                <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                {/* <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Posted {new Date(job.JobPosted).toLocaleDateString()}
+                                </svg> */}
+                                {/* Posted {new Date(job.JobPosted).toLocaleDateString()} */}
                               </div>
                               {job.salary && (
                                 <div className="flex items-center">
@@ -281,7 +281,7 @@ export default function CareersPage() {
                             dangerouslySetInnerHTML={{ __html: job.description || 'No description available' }}
                           /> */}
 
-                            <button
+                            {/* <button
                               className="text-primary font-[400] text-sm hover:text-primary-dark transition-colors"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -290,7 +290,7 @@ export default function CareersPage() {
                               }}
                             >
                               Apply Now &rarr;
-                            </button>
+                            </button> */}
                           </div>
                         </motion.div>
                       ))
