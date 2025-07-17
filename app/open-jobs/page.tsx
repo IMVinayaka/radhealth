@@ -135,7 +135,7 @@ export default function CareersPage() {
         {/* Search Section */}
         <section id='careers-search' className="py-12 mt-20">
           <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 -mt-12 relative z-10">
+            <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6 -mt-12 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Search Jobs</label>
@@ -216,8 +216,8 @@ export default function CareersPage() {
           </div>
         ) : (
           <section className="py-6 ">
-            <div className="container mx-auto px-4">
-              <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="container mx-auto">
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-900">
                     {filteredJobs.length} {filteredJobs.length === 1 ? 'Job' : 'Jobs'} Found
@@ -232,9 +232,9 @@ export default function CareersPage() {
                   </div> */}
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 2xl:gap-8">
+                <div className="grid sm:grid-cols-1 grid-cols-3  xl:grid-cols-3 lg:grid-cols-3 gap-6 2xl:gap-8">
                   {/* Job List */}
-                  <div className="xl:col-span-1 space-y-4 lg:max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
+                  <div className="col-span-1  space-y-4 lg:max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
                     {filteredJobs.length > 0 ? (
                       filteredJobs.map((job) => (
                         <motion.div
@@ -306,7 +306,7 @@ export default function CareersPage() {
                   </div>
 
                   {/* Job Details */}
-                  <div id='job_details' className="xl:col-span-2">
+                  <div id='job_details' className="col-span-2 md:col-span-2">
                     {selectedJob ? (
                       <div className="sticky top-6 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                         <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">

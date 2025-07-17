@@ -73,6 +73,6 @@
 @media (min-width: 900px) and (max-width: 1200px) {
   /* Your CSS here for xl screens */
   :root {
-    font-size: 70% !important;
+    font-size: 65% !important;
   }
 }
