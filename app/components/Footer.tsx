@@ -74,10 +74,10 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-3 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
             <p className='text-white mb-3 '>
-              Registered Office
+           
               <br />
               <span className='flex items-center justify-start mt-1'>
-               6750 N. Andrews Ave., Suite 200 Fort Lauderdale, FL 33309
+              Registered Office : 6750 N. Andrews Ave., Suite 200 Fort Lauderdale, FL 33309
               </span>
             </p>
             &copy; {currentYear} RadHealth<sup>+</sup>. All rights reserved.
