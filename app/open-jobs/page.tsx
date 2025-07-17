@@ -251,8 +251,8 @@ export default function CareersPage() {
                           <div className="py-4 px-3">
                             <div className="flex justify-between items-start">
                               <div>
-                                <h3 className="text-md font-[500] text-gray-900 mb-1">{job.JobTitle}</h3>
-                                <p className="text-primary text-sm font-[400] mb-2">{job.location}</p>
+                                <h3 title={job.JobTitle} className="text-md ellipsis truncate font-[500] text-gray-900 mb-1">{job.JobTitle}</h3>
+                                <p title={job.location} className="text-primary ellipsis truncate text-sm font-[400] mb-2">{job.location}</p>
                               </div>
                               {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
                       {job.type}
