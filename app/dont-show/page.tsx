@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { motion, useScroll } from 'framer-motion';
 
 // Import all icons
@@ -27,11 +27,9 @@ import rrtIcon from '../assets/images/rad_health_icons/RRT.svg';
 import ultrasoundTechIcon from '../assets/images/rad_health_icons/Ultrasound_Tech.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 
 const CareersPage = () => {
-    const router = useRouter();
     // Parallax effects
     const targetRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -62,16 +60,11 @@ const CareersPage = () => {
     { icon: ultrasoundTechIcon, title: 'Ultrasound Tech / Sonographer & Vascular Tech' },
   ];
 
-  const [dontShow] = useState(false);
-  if(!dontShow){
-    router.push('/open-jobs');
-  }
-
   return (
 
     <section id="about-values" className="min-h-screen  section bg-white/50 backdrop-blur-sm py-20 mt-24">
 
-      {/* <div   className='flex items-end justify-end mx-24' >
+      <div   className='flex items-end justify-end mx-24' >
         <Link className="max-w-max  bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors" href="/open-jobs">Open Jobs</Link>
       </div>
       <div className="container mx-auto px-4">
@@ -122,7 +115,7 @@ const CareersPage = () => {
             </motion.div>
           ))}
         </div>
-      </div> */}
+      </div>
     </section>
   )
 }
