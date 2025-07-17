@@ -69,3 +69,10 @@
     font-size: 70% !important;
   }
 }
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 900px) and (max-width: 1200px) {
+  /* Your CSS here for xl screens */
+  :root {
+    font-size: 70% !important;
+  }
+}
