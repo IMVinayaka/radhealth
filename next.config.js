@@ -2,6 +2,9 @@
 const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_GEMINI_API_KEY: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
+  },
   // Only enable output: 'export' in production
   ...(isProd ? { output: 'export' } : {}),
   // Remove basePath since we're using custom domain
