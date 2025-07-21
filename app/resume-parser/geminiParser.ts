@@ -1,35 +1,15 @@
 import { GenerateContentResult, GoogleGenerativeAI } from "@google/generative-ai";
 import * as mammoth from 'mammoth';
-import * as pdfjs from 'pdfjs-dist';
-import { GlobalWorkerOptions } from 'pdfjs-dist';
+
 
 // Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyDp83vZVzbLZ6hh7Jr35ICC_HYxsL-wR9Y');
 
 
 
-// Set the worker source for PDF.js
-const pdfjsLib = pdfjs;
 
 async function extractTextFromFile(file: File): Promise<string> {
-    if (file.type === 'application/pdf') {
-      // Handle PDF files
-      // Set the worker source
-      GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-      
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-      let text = '';
-      
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        const strings = content.items.map(item => 'str' in item ? item.str : '');
-        text += strings.join(' ') + '\n';
-      }
-      
-      return text;
-    } else if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
+    if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
       // Handle Word documents
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
