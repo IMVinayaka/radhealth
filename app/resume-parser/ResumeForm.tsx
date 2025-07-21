@@ -3,9 +3,10 @@ import { useState } from 'react';
 interface ResumeFormProps {
   initialData: IResume;
   onSubmit: (data: IResume) => void;
+  onCancel?: () => void;
 }
 
-export default function ResumeForm({ initialData, onSubmit }: ResumeFormProps) {
+export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFormProps) {
   const [formData, setFormData] = useState<IResume>(() => ({
     name: {
       first: initialData?.name?.first || '',
@@ -348,13 +349,13 @@ export default function ResumeForm({ initialData, onSubmit }: ResumeFormProps) {
                     addSkill();
                   }
                 }}
-                className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-lg border border-gray-300 focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                 placeholder="e.g., JavaScript, React, Node.js"
               />
               <button
                 type="button"
                 onClick={addSkill}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-lg text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
               >
                 Add
               </button>
@@ -364,13 +365,13 @@ export default function ResumeForm({ initialData, onSubmit }: ResumeFormProps) {
                 {formData.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-extraLight text-primary-dark"
                   >
                     {skill}
                     <button
                       type="button"
                       onClick={() => removeSkill(skill)}
-                      className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-500 focus:outline-none focus:bg-blue-500 focus:text-white"
+                      className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full text-primary hover:bg-primary-dark hover:text-white focus:outline-none focus:bg-primary-dark focus:text-white transition-colors"
                     >
                       <span className="sr-only">Remove {skill}</span>
                       <svg className="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
@@ -393,7 +394,7 @@ export default function ResumeForm({ initialData, onSubmit }: ResumeFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Application'}
         </button>
