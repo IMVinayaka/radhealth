@@ -53,7 +53,7 @@ interface FormData {
   summary: string;
 }
 
-export default function ResumeParserPage() {
+export default function ResumeParserPage({jobTitle, jobId}: {jobTitle?: string, jobId?: string}) {
   const [parsedData, setParsedData] = useState<Partial<FormData> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -68,12 +68,6 @@ export default function ResumeParserPage() {
     setFile(file);
     
     try {
-      // For demo purposes, we'll simulate an API call with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Extract text from the resume file
-
-      
       // Parse the extracted text
       const parsedData = await parseResumeWithGemini(file);
       
@@ -152,10 +146,10 @@ export default function ResumeParserPage() {
   };
 
   return (
-    <div className="min-h-screen bg-primary-extraLight py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-primary mb-3">Resume Parser</h1>
+          <h1 className="text-4xl font-bold text-primary mb-3">{jobTitle}</h1>
           <p className="text-lg text-text-muted">
             {file ? 'Review and update your details' : 'Upload your resume to get started'}
           </p>
