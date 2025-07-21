@@ -5,6 +5,16 @@ interface ResumeFormProps {
   onSubmit: (data: IResume) => void;
   onCancel?: () => void;
 }
+interface Certification {
+  id: number;
+  name: string;
+  file: File | null;
+}
+const CERT_OPTIONS = [
+  "ABOR", "ACLR", "BLS", "LPN", "NBSTSA", 
+  "NIHSS", "PALS", "RN", "Others"
+];
+
 
 export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFormProps) {
   const [formData, setFormData] = useState<IResume>(() => ({
@@ -30,11 +40,16 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     authorization: initialData?.authorization || false,
     experience: initialData?.experience || 0,
     workStatus: initialData?.workStatus || '',
-    resumeCategory: initialData?.resumeCategory || 'Health Care'
+    resumeCategory: initialData?.resumeCategory || 'Health Care',
+    certificates: initialData?.certificates || [],
+    coverLetter: initialData?.coverLetter || ''
   }));
+
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [skillsInput, setSkillsInput] = useState('');
+  const [showCertificateForm, setShowCertificateForm] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -93,6 +108,16 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     }));
   };
 
+
+
+
+  const handleCoverLetterChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      coverLetter: e.target.value
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -122,6 +147,40 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia",
     "Washington", "West Virginia", "Wisconsin", "Wyoming"
   ];
+
+    const [certifications, setCertifications] = useState<Certification[]>([]);
+
+    const [submitStatus, setSubmitStatus] = useState<{
+      type: 'success' | 'error' | null;
+      message: string;
+    }>({ type: null, message: '' });
+
+  const addCertification = () => {
+    if (certifications.length >= 5) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'You can only add up to 5 certifications.'
+      });
+      return;
+    }
+
+    setCertifications(prev => [
+      ...prev,
+      { id: Date.now(), name: '', file: null }
+    ]);
+  };
+
+  const removeCertification = (id: number) => {
+    setCertifications(prev => prev.filter(cert => cert.id !== id));
+  };
+
+  const handleCertificationChange = (id: number, field: 'name' | 'file', value: string | File | null) => {
+    setCertifications(prev => 
+      prev.map(cert => 
+        cert.id === id ? { ...cert, [field]: value } : cert
+      )
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -390,11 +449,92 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
 
 
 
-      <div className="flex justify-end">
+      {/* Certificates Section */}
+      <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Certifications (Optional)
+                </label>
+                <button
+                  type="button"
+                  onClick={addCertification}
+                  className="text-sm text-primary hover:text-primary-dark font-medium flex items-center"
+                  disabled={isSubmitting || certifications.length >= 5}
+                >
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Add Certification
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                {certifications.map((cert) => (
+                  <div key={cert.id} className="flex items-start space-x-2 p-3 rounded-md">
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <select
+                        value={cert.name}
+                        onChange={(e) => handleCertificationChange(cert.id, 'name', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70 text-sm bg-white"
+                        disabled={isSubmitting}
+                      >
+                        <option value="">Select certification</option>
+                        {CERT_OPTIONS.map((certType) => (
+                          <option key={certType} value={certType}>
+                            {certType}
+                          </option>
+                        ))}
+                      </select>
+                      
+                      <div className="relative">
+                        <input
+                          type="file"
+                          onChange={(e) => 
+                            handleCertificationChange(
+                              cert.id, 
+                              'file', 
+                              e.target.files && e.target.files[0] ? e.target.files[0] : null
+                            )
+                          }
+                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                          className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 rounded-md transition-colors"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => removeCertification(cert.id)}
+                      className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                      disabled={isSubmitting}
+                      aria-label="Remove certification"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+   
+
+      <div className="flex justify-between mt-6">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            Back
+          </button>
+        )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="ml-auto px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Application'}
         </button>

@@ -237,15 +237,6 @@ export default function ResumeParserPage() {
                 onSubmit={handleSubmit} 
                 onCancel={() => setParsedData(null)}
               />
-              
-              <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-                <p className="text-sm text-text-muted">
-                  By submitting this form, you agree to our{' '}
-                  <a href="/terms" className="font-medium text-primary hover:text-primary-dark">
-                    terms and conditions
-                  </a>.
-                </p>
-              </div>
             </div>
           </div>
         )}

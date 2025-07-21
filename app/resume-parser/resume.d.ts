@@ -15,6 +15,13 @@ interface IEducationDetail {
   [key: string]: any; // Allow additional properties
 }
 
+interface ICertificate {
+  id: number;
+  name: string;
+  file: File | null;
+  [key: string]: any;
+}
+
 interface IResume {
   name: {
     first: string;
@@ -41,6 +48,8 @@ interface IResume {
   resumeCategory: string;
   experienceDetails?: IExperienceDetail[];
   educationDetails?: IEducationDetail[];
+  certificates?: ICertificate[];
+  coverLetter?: string;
   summary?: string;
   [key: string]: any; // Allow additional properties
 }
