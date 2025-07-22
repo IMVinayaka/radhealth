@@ -292,7 +292,7 @@ export default function CareersPage() {
           </div>
         ) : (
           <section className="py-6 ">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="container mx-auto px-4">
               <div className="container mx-auto">
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-900">
