@@ -163,7 +163,7 @@ export default function CareersPage() {
   const sortedJobs = [...mockJobs].sort((a, b) => {
     const dateA = new Date(a.JobPosted).getTime();
     const dateB = new Date(b.JobPosted).getTime();
-    return dateA - dateB; // For descending order (newest first)
+    return dateB - dateA; // For descending order (newest first)
   });
 
   const filteredJobs = sortedJobs.filter(job => {
