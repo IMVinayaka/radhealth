@@ -8,6 +8,7 @@ import { submitCertification, submitJobApplication } from '../services/jobServic
 
 import DOMPurify from 'dompurify';
 import { ShieldCloseIcon, XCircleIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Name {
   first: string;
@@ -150,6 +151,8 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
   // In ResumeForm.tsx
   const handleSubmit = async (e: React.FormEvent, jobData: Partial<IResume>, certifications: Certification[]) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
 
     try {
       // Prepare main application form data
@@ -169,8 +172,8 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
       formData.append('WorkStatus', jobData.workStatus);
       formData.append('Experience', jobData.experience.toString());
       formData.append('Skills', jobData.skills.join(', '));
-      formData.append('JobID', jobID || ''); // Make sure to pass jobId as a prop
-      formData.append('ResumeContent', '')
+      formData.append('JobID', jobID || '');
+      formData.append('ResumeContent', '');
 
       // Add resume file if available
       if (file) {
@@ -178,43 +181,49 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
       }
 
       // Submit main application
-      const result = await submitJobApplication(formData);
-
-      if (result.success) {
-        // If there are certificates, submit them
-        if (certifications.length > 0) {
-          const certFormData = new FormData();
-          certFormData.append('EmailID', jobData.email);
-          certFormData.append('JobID', jobID || '');
-
-          // Add each certificate
-          certifications.forEach((cert, index) => {
-            if (cert.file) {
-              certFormData.append(`CertificateName`, cert.name);
-              certFormData.append(`CertificateFile`, cert.file);
-            }
-          });
-
-          await submitCertification(certFormData);
-        }
-
-        // Show success message
-        setSubmitStatus({
-          type: 'success',
-          message: 'Application submitted successfully!'
-        });
-        alert('Application submitted successfully!');
-        setTimeout(() => {
-          onClose?.();
-        }, 2000)
-
+      const response = await submitJobApplication(formData);
+      
+      // Check if the response indicates an error from the API
+      if (response.error) {
+        throw new Error(response.message || 'Failed to submit application');
       }
+
+      // If there are certificates, submit them
+      if (certifications.length > 0) {
+        const certFormData = new FormData();
+        certFormData.append('EmailID', jobData.email);
+        certFormData.append('JobID', jobID || '');
+
+        // Add each certificate
+        certifications.forEach((cert) => {
+          if (cert.file) {
+            certFormData.append(`CertificateName`, cert.name);
+            certFormData.append(`CertificateFile`, cert.file);
+          }
+        });
+
+        await submitCertification(certFormData);
+      }
+
+      // Show success message
+      setSubmitStatus({
+        type: 'success',
+        message: response.message || 'Application submitted successfully!'
+      });
+      toast.success(response.message || 'Application submitted successfully!');
+      
+      // Close the form after a short delay
+      setTimeout(() => {
+        onClose?.();
+      }, 2000);
+
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit application';
       setSubmitStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to submit application'
+        message: errorMessage
       });
-
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -233,20 +242,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
           </p>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-red-800">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {!parsedData ? (
           <div className=" py-12 mt-12 px-4 sm:px-6 lg:px-8">
