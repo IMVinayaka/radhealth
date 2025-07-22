@@ -7,6 +7,7 @@ import { parseResumeWithGemini } from './geminiParser';
 import { submitCertification, submitJobApplication } from '../services/jobService';
 
 import DOMPurify from 'dompurify';
+import { ShieldCloseIcon, XCircleIcon } from 'lucide-react';
 
 interface Name {
   first: string;
@@ -62,30 +63,30 @@ interface Certification {
   file: File | null;
 }
 
-export default function   ResumeParserPage({jobTitle, jobID,onClose}: {jobTitle?: string, jobID?: string,onClose?: () => void}) {
+export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitle?: string, jobID?: string, onClose?: () => void }) {
   const [parsedData, setParsedData] = useState<Partial<FormData> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
 
-/**
- * Sanitize raw HTML text safely using DOMPurify.
- * Returns a sanitized string that can be stored or rendered.
- */
-function extractAndSanitizeHtml(htmlText: string): string {
-  return DOMPurify.sanitize(htmlText);
-}
+  /**
+   * Sanitize raw HTML text safely using DOMPurify.
+   * Returns a sanitized string that can be stored or rendered.
+   */
+  function extractAndSanitizeHtml(htmlText: string): string {
+    return DOMPurify.sanitize(htmlText);
+  }
 
   const handleFileUpload = async (file: File) => {
     setIsLoading(true);
     setError('');
     setFile(file);
-    
+
     try {
       // Parse the extracted text
       const parsedData = await parseResumeWithGemini(file);
-      
+
       // Create the form data with all required fields
       const formData: Partial<FormData> = {
         gender: '',
@@ -113,14 +114,14 @@ function extractAndSanitizeHtml(htmlText: string): string {
         resumeCategory: 'Health Care',
         resumeText: extractAndSanitizeHtml(parsedData.resumeText) || '',
       };
-      
+
       // Update state with the parsed data
       setParsedData(formData);
-      
+
     } catch (err) {
       console.error('Error processing resume:', err);
       setError('Failed to process the resume. Please try again or enter the information manually.');
-      
+
       // Initialize empty form if parsing fails
       setParsedData({
         gender: '',
@@ -128,7 +129,7 @@ function extractAndSanitizeHtml(htmlText: string): string {
         email: '',
         telephone: '',
         homePhone: '',
-        address: { state: '', city: '', zip: '' ,address:'',street:'',country:''},
+        address: { state: '', city: '', zip: '', address: '', street: '', country: '' },
         skills: [],
         employmentBasis: 'Full-Time',
         authorization: false,
@@ -142,83 +143,88 @@ function extractAndSanitizeHtml(htmlText: string): string {
     }
   };
   const [isSubmitting, setIsSubmitting] = useState(false);
-      const [submitStatus, setSubmitStatus] = useState<{
-        type: 'success' | 'error' | null;
-        message: string;
-      }>({ type: null, message: '' });
-// In ResumeForm.tsx
-const handleSubmit = async (e: React.FormEvent,jobData:Partial<IResume>,certifications:Certification[]) => {
-  e.preventDefault();
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+  // In ResumeForm.tsx
+  const handleSubmit = async (e: React.FormEvent, jobData: Partial<IResume>, certifications: Certification[]) => {
+    e.preventDefault();
 
-  try {
-    // Prepare main application form data
-    const formData = new FormData();
-    
-    // Add required fields
-    formData.append('Gender', jobData.gender);
-    formData.append('FirstName', jobData.name.first);
-    formData.append('MiddleName', jobData.name.middle || '');
-    formData.append('LastName', jobData.name.last);
-    formData.append('EmailID',  jobData.email);
-    formData.append('MobileNumber', jobData.telephone);
-    formData.append('FullAddress', jobData.address.address);
-    formData.append('State', jobData.address.state);
-    formData.append('City', jobData.address.city);
-    formData.append('Zip', jobData.address.zip);
-    formData.append('WorkStatus', jobData.workStatus);
-    formData.append('Experience', jobData.experience.toString());
-    formData.append('Skills', jobData.skills.join(', '));
-    formData.append('JobID', jobID || ''); // Make sure to pass jobId as a prop
-    formData.append('ResumeContent','')
-    
-    // Add resume file if available
-    if (file) {
-      formData.append('FILE', file);
-    }
+    try {
+      // Prepare main application form data
+      const formData = new FormData();
 
-    // Submit main application
-    const result = await submitJobApplication(formData);
+      // Add required fields
+      formData.append('Gender', jobData.gender);
+      formData.append('FirstName', jobData.name.first);
+      formData.append('MiddleName', jobData.name.middle || '');
+      formData.append('LastName', jobData.name.last);
+      formData.append('EmailID', jobData.email);
+      formData.append('MobileNumber', jobData.telephone);
+      formData.append('FullAddress', jobData.address.address);
+      formData.append('State', jobData.address.state);
+      formData.append('City', jobData.address.city);
+      formData.append('Zip', jobData.address.zip);
+      formData.append('WorkStatus', jobData.workStatus);
+      formData.append('Experience', jobData.experience.toString());
+      formData.append('Skills', jobData.skills.join(', '));
+      formData.append('JobID', jobID || ''); // Make sure to pass jobId as a prop
+      formData.append('ResumeContent', '')
 
-    if (result.success) {
-      // If there are certificates, submit them
-      if (certifications.length > 0) {
-        const certFormData = new FormData();
-        certFormData.append('EmailID', jobData.email);
-        certFormData.append('JobID', jobID || '');
-        
-        // Add each certificate
-        certifications.forEach((cert, index) => {
-          if (cert.file) {
-            certFormData.append(`CertificateName`, cert.name);
-            certFormData.append(`CertificateFile`, cert.file);
-          }
-        });
-
-        await submitCertification(certFormData);
+      // Add resume file if available
+      if (file) {
+        formData.append('FILE', file);
       }
 
-      // Show success message
+      // Submit main application
+      const result = await submitJobApplication(formData);
+
+      if (result.success) {
+        // If there are certificates, submit them
+        if (certifications.length > 0) {
+          const certFormData = new FormData();
+          certFormData.append('EmailID', jobData.email);
+          certFormData.append('JobID', jobID || '');
+
+          // Add each certificate
+          certifications.forEach((cert, index) => {
+            if (cert.file) {
+              certFormData.append(`CertificateName`, cert.name);
+              certFormData.append(`CertificateFile`, cert.file);
+            }
+          });
+
+          await submitCertification(certFormData);
+        }
+
+        // Show success message
+        setSubmitStatus({
+          type: 'success',
+          message: 'Application submitted successfully!'
+        });
+        alert('Application submitted successfully!');
+        setTimeout(() => {
+          onClose?.();
+        }, 2000)
+
+      }
+    } catch (error) {
       setSubmitStatus({
-        type: 'success',
-        message: 'Application submitted successfully!'
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Failed to submit application'
       });
-      setTimeout(()=>{
-        onClose?.();
-      },2000)
-      
+
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    setSubmitStatus({
-      type: 'error',
-      message: error instanceof Error ? error.message : 'Failed to submit application'
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
-    <div className="min-h-screen bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8">
+    <div className=" bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8">
+      <div className='flex items-center justify-end cursor-pointer'>
+        <XCircleIcon onClick={onClose} />
+      </div>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-primary mb-3">{jobTitle}</h1>
@@ -243,7 +249,10 @@ const handleSubmit = async (e: React.FormEvent,jobData:Partial<IResume>,certific
         )}
 
         {!parsedData ? (
-          <ResumeUploader onFileUpload={handleFileUpload} isLoading={isLoading} />
+          <div className=" py-12 mt-12 px-4 sm:px-6 lg:px-8">
+            <ResumeUploader onFileUpload={handleFileUpload} isLoading={isLoading} />
+
+          </div>
         ) : (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="p-6 border-b border-gray-200">
@@ -269,9 +278,9 @@ const handleSubmit = async (e: React.FormEvent,jobData:Partial<IResume>,certific
                 </div>
               </div>
             </div>
-            
+
             <div className="p-6">
-              <ResumeForm 
+              <ResumeForm
                 initialData={{
                   gender: '',
                   name: {
@@ -301,9 +310,23 @@ const handleSubmit = async (e: React.FormEvent,jobData:Partial<IResume>,certific
                   summary: '',
                   resumeText: parsedData.resumeText || ''
                 }}
-                onSubmit={(e,data,certifications)=>handleSubmit(e,data,certifications)} 
+                onSubmit={(e, data, certifications) => handleSubmit(e, data, certifications)}
                 onCancel={() => setParsedData(null)}
               />
+              {submitStatus?.type && (
+                <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center p-4">
+                  <div className={`bg-${submitStatus.type === 'success' ? 'green' : 'red'}-50 z-50 p-4  min-h-0 flex items-center justify-center`}>
+                    <p className="text-lg font-semibold mb-2">{submitStatus.type === 'success' ? 'Success' : 'Error'}</p>
+                    <p className={`text-sm text-${submitStatus.type === 'success' ? 'green' : 'red'}`}>{submitStatus.message}</p>
+                  </div>
+                </div>
+              )}
+              {isSubmitting &&
+                (
+                  <div className="min-h-[20vh]  flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                  </div>
+                )}
             </div>
           </div>
         )}
