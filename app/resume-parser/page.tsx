@@ -230,7 +230,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
   };
 
   return (
-    <div className=" bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8">
+    <div className=" max-h-[90vh] overflow-auto bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8 min-w-[90%] md:min-w-[60%] lg:min-w-[60%] xl:min-w-[60%]  max-w-7xl">
       <div className='flex items-center justify-end cursor-pointer'>
         <XCircleIcon onClick={onClose} />
       </div>

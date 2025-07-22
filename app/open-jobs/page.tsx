@@ -80,8 +80,8 @@ export default function CareersPage() {
 
   useEffect(() => {
     const today = new Date();
-    
-    switch(selectedPeriod) {
+
+    switch (selectedPeriod) {
       case 'Last 7 days': {
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(today.getDate() - 7);
@@ -146,16 +146,16 @@ export default function CareersPage() {
   // Update the handleSearch function
   const handleSearch = async () => {
     setSearchPerformed(true);
-      try {
-        setLoading(true);
-        const data = await searchJobs(searchTerm, selectedState, location, miles,selectedCategory,from,to);
-        setJobs(data);
-      } catch (err) {
-        console.error('Error searching jobs:', err);
-      } finally {
-        setLoading(false);
-      }
-    
+    try {
+      setLoading(true);
+      const data = await searchJobs(searchTerm, selectedState, location, miles, selectedCategory, from, to);
+      setJobs(data);
+    } catch (err) {
+      console.error('Error searching jobs:', err);
+    } finally {
+      setLoading(false);
+    }
+
     setSelectedJob(null);
   };
 
@@ -440,16 +440,18 @@ export default function CareersPage() {
 
       </div>
       {/* Job Application Modal */}
-      <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-h-[90vh] overflow-auto lg:w-[50%] w-[95%]'>
+      {isModalOpen && (
+        <div className='fixed  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-h-[100vh]  lg:w-[50%] bg-white/50 min-w-[100vw] h-full'>
+          <div className='w-[95vw] h-[100vh] flex items-center justify-center bg-blur'>
+            <ResumeParserPage
+              jobTitle={selectedJob?.JobTitle || ''}
+              jobID={selectedJob?.JobID?.toString() || ''}
+              onClose={() => setIsModalOpen(false)}
+            />
+          </div>
 
-        {isModalOpen && (
-          <ResumeParserPage
-            jobTitle={selectedJob?.JobTitle || ''}
-            jobID={selectedJob?.JobID?.toString() || ''}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
