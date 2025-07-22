@@ -18,7 +18,7 @@ interface SubmitApplicationResponse {
   error?: string;
 }
 
-export const searchJobs = async (keyword: string = '', state: string = '', zipcode: string = '', miles: string = '') => {
+export const searchJobs = async (keyword: string = '', state: string = '', zipcode: string = '', miles: string = '', category: string = '', from: string = '', to: string = '') => {
   try {
     // Create URLSearchParams and only append non-empty parameters
     const params = new URLSearchParams();
@@ -26,7 +26,10 @@ export const searchJobs = async (keyword: string = '', state: string = '', zipco
     if (keyword?.trim()) params.append('Searchkeywords', keyword.trim());
     if (state?.trim()) params.append('state', state.trim());
     if (zipcode?.trim()) params.append('Zipcode', zipcode.trim());
-    if (miles?.trim()) params.append('WithinMiles', miles.trim());
+    if (miles?.trim()) params.append('miles', miles.trim());
+    if (category?.trim()) params.append('SubCategory', category.trim());
+    if (from?.trim()) params.append('Fromdate', from.trim());
+    if (to?.trim()) params.append('ToDate', to.trim());
     params.append('country', 'USA');
     
     // Always include the Group parameter

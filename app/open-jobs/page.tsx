@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import JobApplicationModal from '../components/jobApplicationModal';
 import { searchJobs, Job } from '../services/jobService';
 import AutoScrollSections from '../components/AutoScrollSections';
 import { getStatesByCountry } from '../services/commonServices';
 import ResumeParserPage from '../resume-parser/page';
+import { XCircleIcon } from 'lucide-react';
 
 // Mock data structure to match the original design
 interface MockJob {
@@ -30,11 +30,23 @@ export default function CareersPage() {
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState('');
 
   // Inside the CareersPage component, add these state variables
   const [states, setStates] = useState<{ State: string }[]>([]);
   const [selectedState, setSelectedState] = useState('');
   const [miles, setMiles] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const formatToDDMMYYYY = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}-${day}-${year}`;
+  };
+
+  const [from, setFrom] = useState('01-01-2025');
+  const [to, setTo] = useState(formatToDDMMYYYY(new Date()));
 
   // Parallax effect setup
   const targetRef = useRef<HTMLDivElement>(null);
@@ -58,6 +70,39 @@ export default function CareersPage() {
 
 
 
+  useEffect(() => {
+    const today = new Date();
+    
+    switch(selectedPeriod) {
+      case 'Last 7 days': {
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        setFrom(formatToDDMMYYYY(sevenDaysAgo));
+        setTo(formatToDDMMYYYY(today));
+        break;
+      }
+      case 'Last 14 days': {
+        const fourteenDaysAgo = new Date(today);
+        fourteenDaysAgo.setDate(today.getDate() - 14);
+        setFrom(formatToDDMMYYYY(fourteenDaysAgo));
+        setTo(formatToDDMMYYYY(today));
+        break;
+      }
+      case 'Last 30 days': {
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        setFrom(formatToDDMMYYYY(thirtyDaysAgo));
+        setTo(formatToDDMMYYYY(today));
+        break;
+      }
+      default:
+        // Reset to default or handle other cases
+        setFrom('01-01-2025');
+        setTo(formatToDDMMYYYY(today));
+        break;
+    }
+  }, [selectedPeriod]);
+
   // Convert API jobs to mock job format
   const mockJobs: MockJob[] = jobs.map((job, index) => ({
     JobID: Number(job.JobID),  // Convert string to number
@@ -77,7 +122,7 @@ export default function CareersPage() {
     const fetchInitialJobs = async () => {
       try {
         setLoading(true);
-        const data = await searchJobs('', '', '');
+        const data = await searchJobs('', '', '', '', 'All', from, to);
         setJobs(data);
       } catch (err) {
         console.error('Error fetching initial jobs:', err);
@@ -93,35 +138,27 @@ export default function CareersPage() {
   // Update the handleSearch function
   const handleSearch = async () => {
     setSearchPerformed(true);
-
-    // First try to filter existing jobs
-    const localResults = mockJobs.filter(job => {
-      const matchesSearch = searchTerm === '' ||
-        job.JobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesLocation = location === '' ||
-        job.Zip?.includes(location)
-
-      return matchesSearch && matchesLocation;
-    });
-
-    // If no local results found or using location/state/miles filter, try API search
-    if ((localResults.length === 0 || location || selectedState || miles) &&
-      (searchTerm || location || selectedState || miles)) {
       try {
         setLoading(true);
-        const data = await searchJobs(searchTerm, selectedState, location, miles);
+        const data = await searchJobs(searchTerm, selectedState, location, miles,selectedCategory,from,to);
         setJobs(data);
       } catch (err) {
         console.error('Error searching jobs:', err);
       } finally {
         setLoading(false);
       }
-    }
+    
     setSelectedJob(null);
   };
-  const filteredJobs = mockJobs.filter(job => {
+
+  // Sort jobs by most recent post date (newest first)
+  const sortedJobs = [...mockJobs].sort((a, b) => {
+    const dateA = new Date(a.JobPosted).getTime();
+    const dateB = new Date(b.JobPosted).getTime();
+    return dateA - dateB; // For descending order (newest first)
+  });
+
+  const filteredJobs = sortedJobs.filter(job => {
 
     return job;
   });
@@ -152,26 +189,38 @@ export default function CareersPage() {
                   </div>
                 </div>
 
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
-                  <input
-                    type="text"
-                    placeholder="Zip code"
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <select
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  />
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="Allied Healthcare Others">Allied Healthcare Others</option>
+                    <option value="Nursing">Nursing</option>
+                    <option value="Pharmacy">Pharmacy</option>
+                    <option value="Therapy">Therapy</option>
+                  </select>
                 </div>
 
-                <div className="flex items-end">
-                  <button
-                    onClick={handleSearch}
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Period</label>
+                  <select
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                    value={selectedPeriod}
+                    onChange={(e) => setSelectedPeriod(e.target.value)}
                   >
-                    Search Jobs
-                  </button>
+                    <option value="">All </option>
+                    <option value="Last 7 days">Last 7 days </option>
+                    <option value="Last 14 days">Last 14 days </option>
+                    <option value="Last 30 days">Last 30 days </option>
+
+                  </select>
                 </div>
+
+
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
@@ -188,7 +237,17 @@ export default function CareersPage() {
                     ))}
                   </select>
                 </div>
-
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                  <input
+                    type="text"
+                    placeholder="Zip code"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Within</label>
                   <select
@@ -204,6 +263,14 @@ export default function CareersPage() {
                     <option value="25">25 mi</option>
                     <option value="30">30 mi</option>
                   </select>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={handleSearch}
+                    className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                  >
+                    Search Jobs
+                  </button>
                 </div>
               </div>
 
@@ -250,49 +317,20 @@ export default function CareersPage() {
                             }, 10)
                           }}
                         >
-                          <div className="py-3 flex items-center justify-start px-3">
+                          <div className="py-3  px-3">
                             <div className="flex justify-between items-start overflow-hidden truncate ellipsis">
                               <div className='flex items-center justify-start gap-3'>
                                 <h3 title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 ">{job.JobTitle},</h3>
-                                <h4 title={job.location} className="text-primary ellipsis truncate text-sm font-[400] ">{job.location}</h4>
+
+                                <h5 className='text-xs font-[400] text-primary'>
+
+                                  Posted {new Date(job.JobPosted).toLocaleDateString()}
+                                </h5>
+
                               </div>
-                              {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                      {job.type}
-                    </span> */}
                             </div>
 
-                            <div className="flex items-center text-sm text-gray-500 mb-2">
-                              <div className="flex text-xs items-center mr-6">
-                                {/* <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg> */}
-                                {/* Posted {new Date(job.JobPosted).toLocaleDateString()} */}
-                              </div>
-                              {job.salary && (
-                                <div className="flex items-center">
-                                  <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                  </svg>
-                                  {job.salary}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* <div
-                            className="text-gray-700 mb-4 truncate prose max-w-none"
-                            dangerouslySetInnerHTML={{ __html: job.description || 'No description available' }}
-                          /> */}
-
-                            {/* <button
-                              className="text-primary font-[400] text-sm hover:text-primary-dark transition-colors"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedJob(job);
-                                setIsModalOpen(true);
-                              }}
-                            >
-                              Apply Now &rarr;
-                            </button> */}
+                            <h4 title={job.location} className="text-primary ellipsis truncate text-sm font-[400] ">{job.location}</h4>
                           </div>
                         </motion.div>
                       ))
@@ -301,26 +339,38 @@ export default function CareersPage() {
                         <svg className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                        <p className="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                          <p className="text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+
+
+                        </div>
+                        {/* <div className="flex flex-col items-center gap-2 py-3 mt-16">
+                          <p>No current openings match your profile?</p>
+                          <p>We still want to hear from you. Please upload your resume and we will consider your application for future opportunities.</p>
+                          <p onClick={() => { setIsModalOpen(true); setSelectedJob({ JobTitle: '', JobID: 0, location: '', description: '', salary: '', JobPosted: '', Zip: '', City: '', State: '' }) }} className="text-primary font-medium cursor-pointer">📎 [Upload Resume]</p>
+                        </div> */}
                       </div>
                     )}
                   </div>
 
                   {/* Job Details */}
                   <div id='job_details' className="col-span-2 md:col-span-2">
-                    {selectedJob ? (
+                    {selectedJob && selectedJob.JobID !== 0 ? (
                       <div className="sticky top-6 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-                        <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
-                          <h2 className="text-2xl font-bold mb-2">{selectedJob.JobTitle}</h2>
-                          <p className="text-primary-extraLight">{selectedJob.location}</p>
+                        <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white flex justify-between items-center">
+                          <div>
+                            <h2 className="text-2xl font-bold mb-2">{selectedJob?.JobTitle}</h2>
+                            <p className="text-primary-extraLight">{selectedJob?.location}</p>
+                          </div>
+                          <div>
+                            <XCircleIcon className="cursor-pointer text-primary" onClick={() => setSelectedJob(null)} />
+                          </div>
+
                         </div>
                         <div className="p-6">
                           <div className="flex justify-between items-center mb-6">
-                            {/* <div>
-                    <p className="text-sm text-gray-500">Job Type</p>
-                    <p className="font-medium">{selectedJob.type}</p>
-                  </div> */}
+
                             {selectedJob.salary && (
                               <div>
                                 <p className="text-sm text-gray-500">Salary</p>
@@ -354,13 +404,19 @@ export default function CareersPage() {
                         </div>
                       </div>
                     ) : (
-                      <div className="bg-white rounded-xl shadow-md p-8 text-center h-full flex items-center justify-center">
+                      <div className="bg-white rounded-xl shadow-md p-8 text-center h-full flex flex-col items-center justify-center">
                         <div>
                           <svg className="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                           </svg>
                           <h3 className="text-lg font-medium text-gray-900 mb-2">Select a job</h3>
                           <p className="text-gray-500">Click on a job listing to view details</p>
+
+                        </div>
+                        <div className="flex flex-col items-center gap-2 py-3 mt-16">
+                          <p>No current openings match your profile?</p>
+                          <p>We still want to hear from you. Please upload your resume and we will consider your application for future opportunities.</p>
+                          <p onClick={() => { setIsModalOpen(true); setSelectedJob({ JobTitle: '', JobID: 0, location: '', description: '', salary: '', JobPosted: '', Zip: '', City: '', State: '' }) }} className="text-primary font-medium cursor-pointer">📎 [Upload Resume]</p>
                         </div>
                       </div>
                     )}
@@ -376,7 +432,7 @@ export default function CareersPage() {
 
       </div>
       {/* Job Application Modal */}
-      <div  className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-h-[90vh] overflow-auto lg:w-[50%] w-[95%]'>
+      <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-h-[90vh] overflow-auto lg:w-[50%] w-[95%]'>
 
         {isModalOpen && (
           <ResumeParserPage
