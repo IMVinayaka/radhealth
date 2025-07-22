@@ -45,6 +45,14 @@ export default function CareersPage() {
     return `${month}-${day}-${year}`;
   };
 
+
+  const formatDate = (dateString: string) => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [month, day] = dateString?.split('/')?.map(Number);
+    const monthName = months[month - 1];
+    return `${monthName}-${day}`;
+  };
+
   const [from, setFrom] = useState('01-01-2025');
   const [to, setTo] = useState(formatToDDMMYYYY(new Date()));
 
@@ -319,12 +327,12 @@ export default function CareersPage() {
                         >
                           <div className="py-3  px-3">
                             <div className="flex justify-between items-start overflow-hidden truncate ellipsis">
-                              <div className='flex items-center justify-start gap-3'>
+                              <div className='flex items-center justify-start gap-1'>
                                 <h3 title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 ">{job.JobTitle},</h3>
 
                                 <h5 className='text-xs font-[400] text-primary'>
 
-                                  Posted {new Date(job.JobPosted).toLocaleDateString()}
+                                  Posted {formatDate(job?.JobPosted)}
                                 </h5>
 
                               </div>
