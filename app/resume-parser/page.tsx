@@ -4,6 +4,9 @@ import { useState } from 'react';
 import ResumeUploader from './ResumeUploader';
 import ResumeForm from './ResumeForm';
 import { parseResumeWithGemini } from './geminiParser';
+import { submitCertification, submitJobApplication } from '../services/jobService';
+
+import DOMPurify from 'dompurify';
 
 interface Name {
   first: string;
@@ -51,16 +54,28 @@ interface FormData {
   experienceDetails: ExperienceDetail[];
   educationDetails: EducationDetail[];
   summary: string;
+  resumeText: string;
+}
+interface Certification {
+  id: number;
+  name: string;
+  file: File | null;
 }
 
-export default function ResumeParserPage({jobTitle, jobId}: {jobTitle?: string, jobId?: string}) {
+export default function   ResumeParserPage({jobTitle, jobID,onClose}: {jobTitle?: string, jobID?: string,onClose?: () => void}) {
   const [parsedData, setParsedData] = useState<Partial<FormData> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
 
-
+/**
+ * Sanitize raw HTML text safely using DOMPurify.
+ * Returns a sanitized string that can be stored or rendered.
+ */
+function extractAndSanitizeHtml(htmlText: string): string {
+  return DOMPurify.sanitize(htmlText);
+}
 
   const handleFileUpload = async (file: File) => {
     setIsLoading(true);
@@ -96,6 +111,7 @@ export default function ResumeParserPage({jobTitle, jobId}: {jobTitle?: string, 
         experience: parsedData.experience || 0,
         workStatus: 'Citizen',
         resumeCategory: 'Health Care',
+        resumeText: extractAndSanitizeHtml(parsedData.resumeText) || '',
       };
       
       // Update state with the parsed data
@@ -119,31 +135,87 @@ export default function ResumeParserPage({jobTitle, jobId}: {jobTitle?: string, 
         experience: 0,
         workStatus: 'Citizen',
         resumeCategory: 'Health Care',
+        resumeText: '',
       });
     } finally {
       setIsLoading(false);
     }
   };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitStatus, setSubmitStatus] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+      }>({ type: null, message: '' });
+// In ResumeForm.tsx
+const handleSubmit = async (e: React.FormEvent,jobData:Partial<IResume>,certifications:Certification[]) => {
+  e.preventDefault();
 
-  const handleSubmit = async (data: any) => {
-    try {
-      // In a real app, you would send this data to your backend
-      console.log('Submitting form data:', data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Show success message
-      alert('Application submitted successfully!');
-      
-      // Reset form
-      setParsedData(null);
-      setFile(null);
-    } catch (err) {
-      console.error('Error submitting form:', err);
-      setError('Failed to submit application. Please try again.');
+  try {
+    // Prepare main application form data
+    const formData = new FormData();
+    
+    // Add required fields
+    formData.append('Gender', jobData.gender);
+    formData.append('FirstName', jobData.name.first);
+    formData.append('MiddleName', jobData.name.middle || '');
+    formData.append('LastName', jobData.name.last);
+    formData.append('EmailID',  jobData.email);
+    formData.append('MobileNumber', jobData.telephone);
+    formData.append('FullAddress', jobData.address.address);
+    formData.append('State', jobData.address.state);
+    formData.append('City', jobData.address.city);
+    formData.append('Zip', jobData.address.zip);
+    formData.append('WorkStatus', jobData.workStatus);
+    formData.append('Experience', jobData.experience.toString());
+    formData.append('Skills', jobData.skills.join(', '));
+    formData.append('JobID', jobID || ''); // Make sure to pass jobId as a prop
+    formData.append('ResumeContent','')
+    
+    // Add resume file if available
+    if (file) {
+      formData.append('FILE', file);
     }
-  };
+
+    // Submit main application
+    const result = await submitJobApplication(formData);
+
+    if (result.success) {
+      // If there are certificates, submit them
+      if (certifications.length > 0) {
+        const certFormData = new FormData();
+        certFormData.append('EmailID', jobData.email);
+        certFormData.append('JobID', jobID || '');
+        
+        // Add each certificate
+        certifications.forEach((cert, index) => {
+          if (cert.file) {
+            certFormData.append(`CertificateName`, cert.name);
+            certFormData.append(`CertificateFile`, cert.file);
+          }
+        });
+
+        await submitCertification(certFormData);
+      }
+
+      // Show success message
+      setSubmitStatus({
+        type: 'success',
+        message: 'Application submitted successfully!'
+      });
+      setTimeout(()=>{
+        onClose?.();
+      },2000)
+      
+    }
+  } catch (error) {
+    setSubmitStatus({
+      type: 'error',
+      message: error instanceof Error ? error.message : 'Failed to submit application'
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-primary-extraLight py-12 mt-12 px-4 sm:px-6 lg:px-8">
@@ -226,9 +298,10 @@ export default function ResumeParserPage({jobTitle, jobId}: {jobTitle?: string, 
                   resumeCategory: parsedData.resumeCategory || 'Health Care',
                   experienceDetails: [],
                   educationDetails: [],
-                  summary: ''
+                  summary: '',
+                  resumeText: parsedData.resumeText || ''
                 }}
-                onSubmit={handleSubmit} 
+                onSubmit={(e,data,certifications)=>handleSubmit(e,data,certifications)} 
                 onCancel={() => setParsedData(null)}
               />
             </div>

@@ -6,6 +6,7 @@ import JobApplicationModal from '../components/jobApplicationModal';
 import { searchJobs, Job } from '../services/jobService';
 import AutoScrollSections from '../components/AutoScrollSections';
 import { getStatesByCountry } from '../services/commonServices';
+import ResumeParserPage from '../resume-parser/page';
 
 // Mock data structure to match the original design
 interface MockJob {
@@ -242,16 +243,17 @@ export default function CareersPage() {
                           className={`bg-white m-2 rounded-xl shadow-md  border border-gray-100 hover:shadow-lg transition-shadow duration-300 cursor-pointer ${selectedJob?.JobID === job.JobID ? 'border-primary bg-primary-light/20' : ''
                             }`}
                           whileHover={{ y: -5 }}
-                          onClick={() => {setSelectedJob(job);
-                            setTimeout(()=>{
-                              document.getElementById('job_details')?.scrollIntoView({ behavior: 'smooth' ,block:'nearest'});
-                              },10)
+                          onClick={() => {
+                            setSelectedJob(job);
+                            setTimeout(() => {
+                              document.getElementById('job_details')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }, 10)
                           }}
                         >
                           <div className="py-3 flex items-center justify-start px-3">
                             <div className="flex justify-between items-start overflow-hidden truncate ellipsis">
                               <div className='flex items-center justify-start gap-3'>
-                                <h3   title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 ">{job.JobTitle},</h3>
+                                <h3 title={job.JobTitle} className="text-md max-w-max ellipsis truncate font-[500] text-gray-900 ">{job.JobTitle},</h3>
                                 <h4 title={job.location} className="text-primary ellipsis truncate text-sm font-[400] ">{job.location}</h4>
                               </div>
                               {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
@@ -376,13 +378,13 @@ export default function CareersPage() {
       {/* Job Application Modal */}
       <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-h-[90vh] overflow-auto lg:w-[50%] w-[95%]'>
 
-
-      <JobApplicationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        jobTitle={selectedJob?.JobTitle || ''}
-        jobId={selectedJob?.JobID || ''}
-      />
+        {isModalOpen && (
+          <ResumeParserPage
+            jobTitle={selectedJob?.JobTitle || ''}
+            jobID={selectedJob?.JobID?.toString() || ''}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
       </div>
     </>
   );

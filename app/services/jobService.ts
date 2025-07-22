@@ -64,7 +64,7 @@ export const getJobDetails = async (jobId: string): Promise<Job | null> => {
 
 export const submitJobApplication = async (formData: FormData): Promise<SubmitApplicationResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/QuickApplyJobs`, {
+    const response = await fetch(`${API_BASE_URL}/HealthCareApplyJob`, {
       method: 'POST',
       body: formData,
     });

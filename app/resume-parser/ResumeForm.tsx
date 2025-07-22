@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 interface ResumeFormProps {
   initialData: IResume;
-  onSubmit: (data: IResume) => void;
+  onSubmit: (e: React.FormEvent,data: IResume,certifications:Certification[]) => void;
   onCancel?: () => void;
 }
 interface Certification {
@@ -42,7 +42,8 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     workStatus: initialData?.workStatus || '',
     resumeCategory: initialData?.resumeCategory || 'Health Care',
     certificates: initialData?.certificates || [],
-    coverLetter: initialData?.coverLetter || ''
+    coverLetter: initialData?.coverLetter || '',
+    resumeText: initialData?.resumeText || ''
   }));
 
 
@@ -111,18 +112,13 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
 
 
 
-  const handleCoverLetterChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      coverLetter: e.target.value
-    }));
-  };
+  
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent,jobData:IResume,certifications:Certification[]) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await onSubmit(formData);
+      await onSubmit(e,jobData,certifications);
     } finally {
       setIsSubmitting(false);
     }
@@ -183,7 +179,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={(e)=>handleSubmit(e,formData,certifications)} className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-6 pb-2 border-b border-gray-200">
           Personal Information

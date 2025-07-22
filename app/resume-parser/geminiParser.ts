@@ -2,6 +2,7 @@ import { GenerateContentResult, GoogleGenerativeAI } from "@google/generative-ai
 import * as mammoth from 'mammoth';
 
 
+
 // Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyDp83vZVzbLZ6hh7Jr35ICC_HYxsL-wR9Y');
 
@@ -20,7 +21,45 @@ async function extractTextFromFile(file: File): Promise<string> {
     }
   }
 
-export async function parseResumeWithGemini(file: File): Promise<Partial<IResume>> {
+// Helper function to delay execution
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Function to make the API call with retry logic
+async function callGeminiWithRetry(
+  model: any, 
+  prompt: string | (string | any)[], 
+  maxRetries = 3, 
+  initialDelay = 1000
+): Promise<string> {
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    } catch (error: any) {
+      lastError = error;
+      
+      // Check if it's a 503 error and we should retry
+      if (error.message?.includes('503') && attempt < maxRetries) {
+        const delayMs = initialDelay * Math.pow(2, attempt - 1);
+        console.log(`Attempt ${attempt} failed with 503. Retrying in ${delayMs}ms...`);
+        await delay(delayMs);
+      } else {
+        // If it's not a 503 or we've reached max retries, rethrow the error
+        throw error;
+      }
+    }
+  }
+  
+  // If we've exhausted all retries, throw the last error
+  throw lastError;
+}
+
+
+
+export async function parseResumeWithGemini(file: File, maxRetries = 3): Promise<Partial<IResume>> {
   try {
     let contentToProcess: string | ArrayBuffer;
     
@@ -33,7 +72,7 @@ export async function parseResumeWithGemini(file: File): Promise<Partial<IResume
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash-lite-preview-06-17",
       generationConfig: {
         temperature: 0.2,
         topP: 0.95,
@@ -65,6 +104,7 @@ export async function parseResumeWithGemini(file: File): Promise<Partial<IResume
     - experience: number (total years of professional work experience)
     - workStatus: string (e.g., 'Citizen', 'Permanent Resident', 'Work Visa')
     - resumeCategory: string (e.g., 'Health Care', 'IT', 'Engineering', 'Marketing')
+    -resumeText: string (extract the entire resume text) it should be in HTML format 
     IF ZIP CODE PRESENT GIVE ME THE STATE CITY 
     IF YOU FIND THE STATE WITH SHORT FORM GIVE ME FULL NAME
 
@@ -78,56 +118,66 @@ export async function parseResumeWithGemini(file: File): Promise<Partial<IResume
     Return ONLY the JSON object. Do not include any extra text, markdown formatting, or conversational elements.`;
 
 
-    let result: GenerateContentResult;
-    
-    if (file.type === 'application/pdf') {
-      // For PDFs, use the file data directly
-      const pdfPart = {
-        inlineData: {
-          data: Buffer.from(contentToProcess as ArrayBuffer).toString('base64'),
-          mimeType: 'application/pdf',
-        },
-      };
-      
-      result = await model.generateContent([prompt, pdfPart]);
-    } else {
-      // For text content, use as string
-      result = await model.generateContent([prompt, contentToProcess as string]);
-    }
-    
-    const response = await result.response;
-    console.log('Raw response:', response);
-    
-    // Get the text from the response
-    let text = response.candidates[0]?.content?.parts?.[0]?.text || '';
-    console.log('Raw text:', text);
-    
-    // Try to extract JSON from markdown code blocks first
-    const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
-    if (jsonMatch) {
-      text = jsonMatch[1];
-    } else {
-      // If no code blocks, try to find JSON object/array directly
-      const jsonObjMatch = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-      if (jsonObjMatch) {
-        text = jsonObjMatch[0];
-      }
-    }
-    
-    // Clean up the text
-    text = text.trim();
-    
-    // Remove any trailing characters after the JSON ends
-    const jsonEnd = text.lastIndexOf('}') + 1;
-    if (jsonEnd > 0) {
-      text = text.substring(0, jsonEnd);
-    }
-    
-    console.log('Processed text:', text);
+    let text: string;
     
     try {
+      if (file.type === 'application/pdf') {
+        // For PDFs, use the file data directly
+        const pdfPart = {
+          inlineData: {
+            data: Buffer.from(contentToProcess as ArrayBuffer).toString('base64'),
+            mimeType: 'application/pdf',
+          },
+        };
+        
+        // Use the retry logic for PDFs
+        text = await callGeminiWithRetry(model, [prompt, pdfPart], maxRetries);
+      } else {
+        // For text content, use as string
+        text = await callGeminiWithRetry(model, [prompt, contentToProcess as string], maxRetries);
+      }
+      
+      console.log('Raw text from API:', text);
+      
+      // Try to extract JSON from markdown code blocks first
+      const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
+      if (jsonMatch) {
+        text = jsonMatch[1];
+      } else {
+        // If no code blocks, try to find JSON object/array directly
+        const jsonObjMatch = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+        if (jsonObjMatch) {
+          text = jsonObjMatch[0];
+        }
+      }
+      
+      // Clean up the text
+      text = text.trim();
+    } catch (error: any) {
+      console.error('Error calling Gemini API:', error);
+      if (error.message?.includes('503')) {
+        throw new Error('The service is currently unavailable. Please try again later.');
+      }
+      throw error;
+    }
+    
+    try {
+      // Handle markdown code blocks if present
+      const jsonStart = text.indexOf('```json') >= 0 ? text.indexOf('```json') + 7 : 0;
+      const firstBrace = text.indexOf('{');
+      const startIndex = Math.max(jsonStart, firstBrace);
+      
+      // Find the end of the JSON (last closing brace)
+      let jsonEnd = text.lastIndexOf('}') + 1;
+      if (jsonEnd <= 0) {
+        throw new Error('No valid JSON object found in the response');
+      }
+      
+      // Extract the JSON part
+      const jsonContent = text.substring(startIndex, jsonEnd).trim();
+      
       // Parse and return the JSON
-      return JSON.parse(text) as Partial<IResume>;
+      return JSON.parse(jsonContent) as Partial<IResume>;
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
       console.error('Problematic JSON text:', text);

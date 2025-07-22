@@ -4,7 +4,7 @@ interface IExperienceDetail {
   startDate: string;
   endDate: string;
   description: string;
-  [key: string]: any; // Allow additional properties
+  [key: string]: any; 
 }
 
 interface IEducationDetail {
@@ -12,7 +12,7 @@ interface IEducationDetail {
   field: string;
   institution: string;
   year: string;
-  [key: string]: any; // Allow additional properties
+  [key: string]: any;
 }
 
 interface ICertificate {
@@ -51,5 +51,5 @@ interface IResume {
   certificates?: ICertificate[];
   coverLetter?: string;
   summary?: string;
-  [key: string]: any; // Allow additional properties
+  [key: string]: any; 
 }
