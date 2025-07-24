@@ -19,3 +19,17 @@ export const getStatesByCountry = async (): Promise<State[]> => {
     return [];
   }
 };
+
+export const getSkills =async():Promise<{Skill:string}[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/GetSkillsSet`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch skills');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching skills:', error);
+    return [];
+  }
+};
