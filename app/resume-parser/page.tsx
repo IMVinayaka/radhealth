@@ -225,6 +225,7 @@ const formatDate = (dateString: string) => {
             certFormData.append(`IssuedDate`, formatDate(cert.issuedDate));
             certFormData.append(`IssuedCenter`, cert.issuedCenter);
             certFormData.append(`ExpiryDate`, formatDate(cert.expiryDate));
+            certFormData.append(`CertificateFile`, cert.file);
           }
         });
 
