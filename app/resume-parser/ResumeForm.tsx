@@ -1,16 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getSkills, getStatesByCountry } from '../services/commonServices';
+import { parseCertificateWithGemini } from './certificateParser';
 
 interface ResumeFormProps {
   initialData: IResume;
   onSubmit: (e: React.FormEvent, data: IResume, certifications: Certification[]) => void;
   onCancel?: () => void;
 }
-interface Certification {
-  id: number;
-  name: string;
-  file: File | null;
+export interface Certification {
+  id: string;                     // Unique ID for React key/reference
+  name: string;                   // Selected certificate type (e.g., "AWS", "PMP")
+  file: File | null;              // The uploaded file
+
+  // Optional fields parsed from the certificate or edited manually
+  certificateType?: string;       // Type/category of certificate
+  certificateFullName?: string;   // Full name of the certificate (e.g., "AWS Solutions Architect Associate")
+  nameOnLicense?: string;         // Name printed on certificate
+  issuedNo?: string;              // Certificate/license number
+  issuedDate?: string;            // In ISO format: 'YYYY-MM-DD'
+  expiryDate?: string;            // In ISO format: 'YYYY-MM-DD'
+  issuedCenter?: string;          // Organization that issued the cert
 }
+
 
 export interface State {
   State: string;
@@ -53,11 +64,34 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
   }));
 
 
+  // Define file input ref at the top
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const addCertification = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const [certifications, setCertifications] = useState<Array<{
+    id: string;
+    name: string;
+    file: File | null;
+    certificateType?: string;
+    certificateFullName?: string;
+    nameOnLicense?: string;
+    issuedNo?: string;
+    issuedDate?: string;
+    expiryDate?: string;
+    issuedCenter?: string;
+  }>>([]);
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [certificateParsing, setCertifcateParsing] = useState
+    (false)
   const [skillsInput, setSkillsInput] = useState('');
   const [showSkillSuggestions, setShowSkillSuggestions] = useState(false);
-  const [showCertificateForm, setShowCertificateForm] = useState(false);
   const [stateOptions, setStateOptions] = useState<State[]>([]);
   const [skills, setSkills] = useState<{ Skill: string }[] | null>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -96,9 +130,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     }
   };
 
-  const handleSkillsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSkillsInput(e.target.value);
-  };
+
 
 
 
@@ -109,23 +141,9 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
     }));
   };
 
-  const addSkill = () => {
-    const skillToAdd = skillsInput.trim();
-    if (skillToAdd && !formData.skills.some(skill => skill.toLowerCase() === skillToAdd.toLowerCase())) {
-      setFormData(prev => ({
-        ...prev,
-        skills: [...prev.skills, skillToAdd]
-      }));
-      setSkillsInput('');
-    }
-  };
 
 
-
-
-
-
-  const handleSubmit = async (e: React.FormEvent, jobData: IResume, certifications: Certification[]) => {
+  const handleSubmit = async (e: React.FormEvent, jobData: IResume, certifications: Array<Certification>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
@@ -155,40 +173,23 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
 
 
 
-
-  const [certifications, setCertifications] = useState<Certification[]>([]);
-
   const [submitStatus, setSubmitStatus] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
 
-  const addCertification = () => {
-    if (certifications.length >= 5) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'You can only add up to 5 certifications.'
-      });
-      return;
-    }
 
-    setCertifications(prev => [
-      ...prev,
-      { id: Date.now(), name: '', file: null }
-    ]);
-  };
 
-  const removeCertification = (id: number) => {
+  const removeCertification = (id: string) => {
     setCertifications(prev => prev.filter(cert => cert.id !== id));
   };
 
-  const handleCertificationChange = (id: number, field: 'name' | 'file', value: string | File | null) => {
-    setCertifications(prev =>
-      prev.map(cert =>
-        cert.id === id ? { ...cert, [field]: value } : cert
-      )
+  const handleCertificationChange = (id: string, field: string, value: any) => {
+    setCertifications((prev) =>
+      prev.map((cert) => (cert.id === id ? { ...cert, [field]: value } : cert))
     );
   };
+
 
   useEffect(() => {
     if (submitStatus.type) {
@@ -224,19 +225,21 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
 
   useEffect(() => {
     if (!initialData?.skills || !Array.isArray(skills)) return;
-  
+
     const availableSkillNames = skills.map(s => s.Skill.toLowerCase());
-  
+
     const filteredSkills = initialData.skills.filter(skill =>
       availableSkillNames.includes(skill.toLowerCase())
     );
-  
+
     setFormData(prev => ({
       ...prev,
       skills: filteredSkills
     }));
   }, [initialData?.skills, skills]);
-  
+
+
+
 
   return (
     <div className="relative">
@@ -251,6 +254,67 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
           </div>
         </div>
       )}
+
+      {/* Certificate Overlay */}
+      {certificateParsing && (
+        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-40">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <p className="text-gray-700">Please wait while we parse your certificate...</p>
+          </div>
+        </div>
+      )}
+      {/* certificate picker */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        accept=".pdf,.jpg,.jpeg,.png,.bmp"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+
+          const certId = crypto.randomUUID();
+          const defaultCert = {
+            id: certId,
+            name: '',
+            file: file,
+            certificateType: '',
+            certificateFullName: '',
+            nameOnLicense: '',
+            issuedNo: '',
+            issuedDate: '',
+            expiryDate: '',
+            issuedCenter: '',
+          };
+
+          setCertifications((prev) => [...prev, defaultCert]);
+          setCertifcateParsing(true);
+
+          try {
+            const result = await parseCertificateWithGemini(file);
+            setCertifications((prev) =>
+              prev.map((c) =>
+                c.id === certId
+                  ? {
+                    ...c,
+                    ...result,
+                    file,
+                  }
+                  : c
+              )
+            );
+          } catch (err) {
+            console.error("Parsing error:", err);
+            alert("Failed to parse certificate. You can fill it manually.");
+          } finally {
+            e.target.value = '';
+            setCertifcateParsing(false);
+          }
+        }}
+      />
+
+
 
       <form onSubmit={(e) => handleSubmit(e, formData, certifications)} className="space-y-6" >
         <div className="bg-white shadow rounded-lg p-6">
@@ -485,7 +549,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
                   {showSkillSuggestions && skills && skills.length > 0 && (
                     <div className="absolute max-h-[10rem] mb-6 z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm overflow-auto">
                       {skills
-                        .filter(skill => 
+                        .filter(skill =>
                           !formData?.skills?.some(s => s.toLowerCase() === skill.Skill?.toLowerCase()) &&
                           skill.Skill?.toLowerCase().includes(skillsInput.toLowerCase())
                         )
@@ -509,7 +573,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
                     </div>
                   )}
                 </div>
-                { formData?.skills &&  formData?.skills?.length > 0 && (
+                {formData?.skills && formData?.skills?.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {formData?.skills?.map((skill) => (
                       <span
@@ -543,7 +607,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
         <div>
           <div className="flex justify-between items-center mb-2">
             <label className="block text-sm font-medium text-gray-700">
-              Certifications (Optional)
+              Certificates (Optional)
             </label>
             <button
               type="button"
@@ -554,7 +618,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Add Certification
+              Add Certificates
             </button>
           </div>
 
@@ -562,33 +626,95 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
             {certifications.map((cert) => (
               <div key={cert.id} className="flex items-start space-x-2 p-3 rounded-md">
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <select
-                    value={cert.name}
-                    onChange={(e) => handleCertificationChange(cert.id, 'name', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70 text-sm bg-white"
-                    disabled={isSubmitting}
-                  >
-                    <option value="">Select certification</option>
-                    {CERT_OPTIONS.map((certType) => (
-                      <option key={certType} value={certType}>
-                        {certType}
-                      </option>
-                    ))}
-                  </select>
 
-                  <div className="relative">
+                  <div>
+                    <label htmlFor={`certificateFullName-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Certificate Full Name <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id={`certificateFullName-${cert.id}`}
+                      value={cert.certificateFullName || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'certificateFullName', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
+                      required
+                    >
+                      <option value="" disabled>
+                        Select Certificate
+                      </option>
+                      {CERT_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+
+                  <div>
+                    <label htmlFor={`nameOnLicense-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Name on License
+                    </label>
                     <input
-                      type="file"
-                      onChange={(e) =>
-                        handleCertificationChange(
-                          cert.id,
-                          'file',
-                          e.target.files && e.target.files[0] ? e.target.files[0] : null
-                        )
-                      }
-                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                      className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 rounded-md transition-colors"
-                      disabled={isSubmitting}
+                      id={`nameOnLicense-${cert.id}`}
+                      type="text"
+                      placeholder="Name on License"
+                      value={cert.nameOnLicense || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'nameOnLicense', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`issuedNo-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Issued Number
+                    </label>
+                    <input
+                      id={`issuedNo-${cert.id}`}
+                      type="text"
+                      placeholder="Issued No"
+                      value={cert.issuedNo || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'issuedNo', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`issuedDate-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Issued Date
+                    </label>
+                    <input
+                      id={`issuedDate-${cert.id}`}
+                      type="date"
+                      value={cert.issuedDate || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'issuedDate', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`expiryDate-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Expiry Date
+                    </label>
+                    <input
+                      id={`expiryDate-${cert.id}`}
+                      type="date"
+                      value={cert.expiryDate || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'expiryDate', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`issuedCenter-${cert.id}`} className="block text-sm font-medium text-gray-700">
+                      Issued Center
+                    </label>
+                    <input
+                      id={`issuedCenter-${cert.id}`}
+                      type="text"
+                      placeholder="Issued Center"
+                      value={cert.issuedCenter || ''}
+                      onChange={(e) => handleCertificationChange(cert.id, 'issuedCenter', e.target.value)}
+                      className="w-full px-3 py-2 border rounded"
                     />
                   </div>
                 </div>
@@ -596,9 +722,9 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
                 <button
                   type="button"
                   onClick={() => removeCertification(cert.id)}
-                  className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                  className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors mt-1"
                   disabled={isSubmitting}
-                  aria-label="Remove certification"
+                  aria-label="Remove certificate"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -606,6 +732,7 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
                 </button>
               </div>
             ))}
+
           </div>
         </div>
 
@@ -629,6 +756,8 @@ export default function ResumeForm({ initialData, onSubmit, onCancel }: ResumeFo
             {isSubmitting ? 'Submitting...' : 'Submit Application'}
           </button>
         </div>
-      </form></div>
+      </form>
+
+    </div>
   );
 }

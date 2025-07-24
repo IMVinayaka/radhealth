@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResumeUploader from './ResumeUploader';
 import ResumeForm from './ResumeForm';
 import { parseResumeWithGemini } from './geminiParser';
@@ -9,6 +9,7 @@ import { submitCertification, submitJobApplication } from '../services/jobServic
 import DOMPurify from 'dompurify';
 import { ShieldCloseIcon, XCircleIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getSkills } from '../services/commonServices';
 
 interface Name {
   first: string;
@@ -69,7 +70,15 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
-
+// Format dates to MM/dd/yyyy format
+const formatDate = (dateString: string) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
 
   /**
    * Sanitize raw HTML text safely using DOMPurify.
@@ -78,6 +87,19 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
   function extractAndSanitizeHtml(htmlText: string): string {
     return DOMPurify.sanitize(htmlText);
   }
+  const [skills, setSkills] = useState<{ Skill: string }[] | null>(null);
+  const getSkillsData = async () => {
+    try {
+      const resp = await getSkills();
+      setSkills(resp);
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+      setSkills([]);
+    }
+  }
+  useEffect(()=>{
+    getSkillsData();
+  },[])
 
   const handleFileUpload = async (file: File) => {
     setIsLoading(true);
@@ -86,7 +108,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
 
     try {
       // Parse the extracted text
-      const parsedData = await parseResumeWithGemini(file);
+      const parsedData = await parseResumeWithGemini(file, 3,skills?.map((skill) => skill.Skill) || []);
 
       // Create the form data with all required fields
       const formData: Partial<FormData> = {
@@ -149,7 +171,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
     message: string;
   }>({ type: null, message: '' });
   // In ResumeForm.tsx
-  const handleSubmit = async (e: React.FormEvent, jobData: Partial<IResume>, certifications: Certification[]) => {
+  const handleSubmit = async (e: React.FormEvent, jobData: Partial<IResume>, certifications: any[]) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
@@ -182,7 +204,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
 
       // Submit main application
       const response = await submitJobApplication(formData);
-      
+
       // Check if the response indicates an error from the API
       if (response.error) {
         throw new Error(response.message || 'Failed to submit application');
@@ -197,8 +219,12 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
         // Add each certificate
         certifications.forEach((cert) => {
           if (cert.file) {
-            certFormData.append(`CertificateName`, cert.name);
-            certFormData.append(`CertificateFile`, cert.file);
+            certFormData.append(`CertificateName`, cert.certificateFullName);
+            certFormData.append(`NameOnLicense`, cert.nameOnLicense);
+            certFormData.append(`IssuedNo`, cert.issuedNo);
+            certFormData.append(`IssuedDate`, formatDate(cert.issuedDate));
+            certFormData.append(`IssuedCenter`, cert.issuedCenter);
+            certFormData.append(`ExpiryDate`, formatDate(cert.expiryDate));
           }
         });
 
@@ -211,7 +237,7 @@ export default function ResumeParserPage({ jobTitle, jobID, onClose }: { jobTitl
         message: response.message || 'Application submitted successfully!'
       });
       toast.success(response.message || 'Application submitted successfully!');
-      
+
       // Close the form after a short delay
       setTimeout(() => {
         onClose?.();

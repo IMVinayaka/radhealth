@@ -59,7 +59,7 @@ async function callGeminiWithRetry(
 
 
 
-export async function parseResumeWithGemini(file: File, maxRetries = 3): Promise<Partial<IResume>> {
+export async function parseResumeWithGemini(file: File, maxRetries = 3,availableSkills: string[]): Promise<Partial<IResume>> {
   try {
     let contentToProcess: string | ArrayBuffer;
     
@@ -98,7 +98,7 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3): Promise
         country: string
       }
     - gender: string (extract if explicitly mentioned, otherwise empty string)
-    - skills: string[] (extract all technical and soft skills which is mentioned in the resume by the canidate dont select based on the job description)
+    - skills: string[] (extract all technical and soft skills which is mentioned in the resume. Here are the available skills: ${availableSkills.join(', ')},retunr the same skills you found in the resume)
     - employmentBasis: string (e.g., 'Full-Time', 'Part-Time', 'Contract')
     - authorization: boolean (work authorization status)
     - experience: number (total years of professional work experience)
