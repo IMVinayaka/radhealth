@@ -211,26 +211,23 @@ const formatDate = (dateString: string) => {
       }
 
       // If there are certificates, submit them
-      if (certifications.length > 0) {
-        const certFormData = new FormData();
-        certFormData.append('EmailID', jobData.email);
-        certFormData.append('JobID', jobID || '');
-
-        // Add each certificate
-        certifications.forEach((cert) => {
-          if (cert.file) {
-            certFormData.append(`CertificateName`, cert.certificateFullName);
-            certFormData.append(`NameOnLicense`, cert.nameOnLicense);
-            certFormData.append(`IssuedNo`, cert.issuedNo);
-            certFormData.append(`IssuedDate`, formatDate(cert.issuedDate));
-            certFormData.append(`IssuedCenter`, cert.issuedCenter);
-            certFormData.append(`ExpiryDate`, formatDate(cert.expiryDate));
-            certFormData.append(`CertificateFile`, cert.file);
-          }
-        });
-
-        await submitCertification(certFormData);
+      for (const cert of certifications) {
+        if (cert.file) {
+          const certFormData = new FormData();
+          certFormData.append('emailID', jobData.email);
+          certFormData.append('JobID', jobID || '');
+          certFormData.append('CertificateName', cert.certificateFullName);
+          certFormData.append('NameOnLicense', cert.nameOnLicense);
+          certFormData.append('IssuedNo', cert.issuedNo);
+          certFormData.append('IssuedDate', formatDate(cert.issuedDate));
+          certFormData.append('IssuedCenter', cert.issuedCenter);
+          certFormData.append('ExpiryDate', formatDate(cert.expiryDate));
+          certFormData.append('FILE', cert.file);
+      
+          await submitCertification(certFormData); // Submit this certificate before moving to the next
+        }
       }
+      
 
       // Show success message
       setSubmitStatus({
