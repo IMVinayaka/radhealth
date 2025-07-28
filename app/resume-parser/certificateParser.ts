@@ -3,7 +3,7 @@ import Tesseract from "tesseract.js";
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(
-  process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""
+  process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyDp83vZVzbLZ6hh7Jr35ICC_HYxsL-wR9Y'
 );
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
