@@ -98,7 +98,7 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
         country: string
       }
     - gender: string (extract if explicitly mentioned, otherwise empty string)
-    - skills: string[] (extract all technical and soft skills which is mentioned in the resume. Here are the available skills: ${availableSkills.join(', ')},retunr the same skills you found in the resume)
+    - skills: string[] (extract all technical and soft skills matching the skills sets provided. Here are the available skills: ${availableSkills.join(', ')})
     - employmentBasis: string (e.g., 'Full-Time', 'Part-Time', 'Contract')
     - authorization: boolean (work authorization status)
     - experience: number (total years of professional work experience)
