@@ -117,7 +117,7 @@ Required fields:
   2. For grouped skills, if any of the terms separated by "or" appears anywhere (case-insensitive), return the entire grouped skill phrase exactly as it appears in the list.
   3. Return only the matched skills, no extras.
   4. Output a JSON array of strings with the matched skill phrases, e.g.:
-     ["Long Term Care", "Rehabilitation", "Triage"]
+     ["Long Term Care or Rehabilitation", "Rehabilitation or Long Term Care","ICU","RN"]
   5. If no skills are found, return an empty array: [].
   6. Ensure the skills are present in the available skills list.
 )
