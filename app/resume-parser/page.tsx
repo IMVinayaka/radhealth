@@ -108,7 +108,7 @@ const formatDate = (dateString: string) => {
 
     try {
       // Parse the extracted text
-      const parsedData = await parseResumeWithGemini(file, 3,skills?.map((skill) => skill.Skill) || []);
+      const parsedData = await parseResumeWithGemini(file, 3,skills || []);
 
       // Create the form data with all required fields
       const formData: Partial<FormData> = {

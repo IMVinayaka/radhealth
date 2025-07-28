@@ -10,29 +10,29 @@ const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '
 
 
 async function extractTextFromFile(file: File): Promise<string> {
-    if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
-      // Handle Word documents
-      const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      return result.value;
-    } else {
-      // For plain text files
-      return await file.text();
-    }
+  if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
+    // Handle Word documents
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value;
+  } else {
+    // For plain text files
+    return await file.text();
   }
+}
 
 // Helper function to delay execution
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Function to make the API call with retry logic
 async function callGeminiWithRetry(
-  model: any, 
-  prompt: string | (string | any)[], 
-  maxRetries = 3, 
+  model: any,
+  prompt: string | (string | any)[],
+  maxRetries = 3,
   initialDelay = 1000
 ): Promise<string> {
   let lastError;
-  
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const result = await model.generateContent(prompt);
@@ -40,7 +40,7 @@ async function callGeminiWithRetry(
       return response.candidates?.[0]?.content?.parts?.[0]?.text || '';
     } catch (error: any) {
       lastError = error;
-      
+
       // Check if it's a 503 error and we should retry
       if (error.message?.includes('503') && attempt < maxRetries) {
         const delayMs = initialDelay * Math.pow(2, attempt - 1);
@@ -52,17 +52,17 @@ async function callGeminiWithRetry(
       }
     }
   }
-  
+
   // If we've exhausted all retries, throw the last error
   throw lastError;
 }
 
 
 
-export async function parseResumeWithGemini(file: File, maxRetries = 3,availableSkills: string[]): Promise<Partial<IResume>> {
+export async function parseResumeWithGemini(file: File, maxRetries = 3, availableSkills: { Skill: string }[]): Promise<Partial<IResume>> {
   try {
     let contentToProcess: string | ArrayBuffer;
-    
+
     if (file.type === 'application/pdf') {
       // For PDFs, read the file as ArrayBuffer
       contentToProcess = await file.arrayBuffer();
@@ -80,46 +80,69 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
         maxOutputTokens: 65536,
       },
     });
+    const prompt = `YOU ARE AN EXPERT RESUME EXTRACTOR. Extract the following information from the ${file.type === 'application/pdf' ? 'PDF resume' : 'resume text'} in JSON format.
 
-    const prompt = `Extract the following information from the ${file.type === 'application/pdf' ? 'PDF resume' : 'resume text'} in JSON format.
-    If a field is not found or is not applicable, return an empty string, false, or an empty array as appropriate for its type.
-    Ensure all fields listed below are present in the final JSON object, even if empty.
+If a field is not found or not applicable, return an empty string, false, zero, or an empty array as appropriate for its type.
 
-    Required fields:
-    - name: { first: string, middle: string, last: string } (extract from the top of the resume)
-    - email: string (primary contact email)
-    - telephone: string (primary phone number)
-    - homePhone: string (home phone number if available, otherwise empty string)
-    - address: {
-        street: string,
-        city: string,
-        state: string,
-        zip: string,
-        country: string
-      }
-    - gender: string (extract if explicitly mentioned, otherwise empty string)
-    - skills: string[] (Can you please analyze attached resume and give me skills set present in given list: ${availableSkills.join(', ')})
-    - employmentBasis: string (e.g., 'Full-Time', 'Part-Time', 'Contract')
-    - authorization: boolean (work authorization status)
-    - experience: number (total years of professional work experience)
-    - workStatus: string (e.g., 'Citizen', 'Permanent Resident', 'Work Visa')
-    - resumeCategory: string (e.g., 'Health Care', 'IT', 'Engineering', 'Marketing')
-    -resumeText: string (extract the entire resume text) it should be in HTML format 
-    IF ZIP CODE PRESENT GIVE ME THE STATE CITY 
-    IF YOU FIND THE STATE WITH SHORT FORM GIVE ME FULL NAME
+Ensure all fields listed below are present in the final JSON object, even if empty.
 
-    
+Required fields:
+- name: { first: string, middle: string, last: string } (extract from the top of the resume)
+- email: string (primary contact email)
+- telephone: string (primary phone number)
+- homePhone: string (home phone number if available, otherwise empty string)
+- address: {
+    street: string,
+    city: string,
+    state: string,
+    zip: string,
+    country: string
+  }
+- gender: string (extract only if explicitly mentioned, otherwise empty string)
+- skills: string[] (
+  You are an expert at extracting skills from resumes.
 
-    Additional sections (extract if available):
-    - experienceDetails: Array<{title, company, startDate, endDate, description}>
-    - educationDetails: Array<{degree, field, institution, year}>
-    - summary: string
+  Given this dynamic list of allowed skills:
+  ${availableSkills.map(skill => `- ${skill?.Skill}`).join('\n')}
 
-    Return ONLY the JSON object. Do not include any extra text, markdown formatting, or conversational elements.`;
+  Each skill may be:
+  - a single word or phrase (e.g., "Triage")
+  - or a grouped skill with multiple terms separated by "or" (e.g., "Rehabilitation or Long Term Care").
+
+  Task:
+  From the entire resume text, identify all skills mentioned.
+
+  Rules:
+  1. For single skills, if the exact phrase appears anywhere (case-insensitive), include it.
+  2. For grouped skills, if any of the terms separated by "or" appears anywhere (case-insensitive), return the entire grouped skill phrase exactly as it appears in the list.
+  3. Return only the matched skills, no extras.
+  4. Output a JSON array of strings with the matched skill phrases, e.g.:
+     ["Long Term Care", "Rehabilitation", "Triage"]
+  5. If no skills are found, return an empty array: [].
+  6. Ensure the skills are present in the available skills list.
+)
+
+- employmentBasis: string (e.g., 'Full-Time', 'Part-Time', 'Contract')
+- authorization: boolean (work authorization status)
+- experience: number (total years of professional experience)
+- workStatus: string (e.g., 'Citizen', 'Permanent Resident', 'Work Visa')
+- resumeCategory: string (e.g., 'Health Care', 'IT', 'Engineering', 'Marketing')
+- resumeText: string (extract the entire resume text in HTML format)
+- If a zip code is present, extract and return the corresponding city and full state name
+- If a state abbreviation is found, convert and return the full state name
+
+Additional sections (extract if available):
+- experienceDetails: Array<{title: string, company: string, startDate: string, endDate: string, description: string}>
+- educationDetails: Array<{degree: string, field: string, institution: string, year: string}>
+- summary: string
+
+Return ONLY the JSON object. No extra text, markdown formatting, or explanations.`;
+
+
 
 
     let text: string;
-    
+
     try {
       if (file.type === 'application/pdf') {
         // For PDFs, use the file data directly
@@ -129,16 +152,16 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
             mimeType: 'application/pdf',
           },
         };
-        
+
         // Use the retry logic for PDFs
         text = await callGeminiWithRetry(model, [prompt, pdfPart], maxRetries);
       } else {
         // For text content, use as string
         text = await callGeminiWithRetry(model, [prompt, contentToProcess as string], maxRetries);
       }
-      
+
       console.log('Raw text from API:', text);
-      
+
       // Try to extract JSON from markdown code blocks first
       const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
       if (jsonMatch) {
@@ -150,7 +173,7 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
           text = jsonObjMatch[0];
         }
       }
-      
+
       // Clean up the text
       text = text.trim();
     } catch (error: any) {
@@ -160,22 +183,22 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
       }
       throw error;
     }
-    
+
     try {
       // Handle markdown code blocks if present
       const jsonStart = text.indexOf('```json') >= 0 ? text.indexOf('```json') + 7 : 0;
       const firstBrace = text.indexOf('{');
       const startIndex = Math.max(jsonStart, firstBrace);
-      
+
       // Find the end of the JSON (last closing brace)
       let jsonEnd = text.lastIndexOf('}') + 1;
       if (jsonEnd <= 0) {
         throw new Error('No valid JSON object found in the response');
       }
-      
+
       // Extract the JSON part
       const jsonContent = text.substring(startIndex, jsonEnd).trim();
-      
+
       // Parse and return the JSON
       return JSON.parse(jsonContent) as Partial<IResume>;
     } catch (parseError) {
@@ -183,7 +206,7 @@ export async function parseResumeWithGemini(file: File, maxRetries = 3,available
       console.error('Problematic JSON text:', text);
       throw new Error(`Failed to parse resume: ${parseError.message}`);
     }
-    
+
   } catch (error) {
     console.error('Error in parseResumeWithGemini:', error);
     // Re-throw or handle the error appropriately for your application
