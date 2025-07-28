@@ -44,7 +44,6 @@ async function callGeminiWithRetry(
       // Check if it's a 503 error and we should retry
       if (error.message?.includes('503') && attempt < maxRetries) {
         const delayMs = initialDelay * Math.pow(2, attempt - 1);
-        console.log(`Attempt ${attempt} failed with 503. Retrying in ${delayMs}ms...`);
         await delay(delayMs);
       } else {
         // If it's not a 503 or we've reached max retries, rethrow the error
@@ -159,8 +158,6 @@ Return ONLY the JSON object. No extra text, markdown formatting, or explanations
         // For text content, use as string
         text = await callGeminiWithRetry(model, [prompt, contentToProcess as string], maxRetries);
       }
-
-      console.log('Raw text from API:', text);
 
       // Try to extract JSON from markdown code blocks first
       const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);

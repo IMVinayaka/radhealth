@@ -37,7 +37,6 @@ async function callGeminiWithRetry(
       lastError = error;
       if (error.message?.includes("503") && attempt < maxRetries) {
         const delayMs = initialDelay * Math.pow(2, attempt - 1);
-        console.log(`Attempt ${attempt} failed. Retrying in ${delayMs}ms...`);
         await delay(delayMs);
       } else {
         throw error;
@@ -91,7 +90,6 @@ Use empty strings for missing values. Do not include any extra text. Return ONLY
         [prompt, pdfPart],
         maxRetries
       );
-      console.log("Gemini PDF response:", text);
 
       const jsonMatch = text.match(/\{[\s\S]*?\}/);
       if (jsonMatch) return JSON.parse(jsonMatch[0]);
@@ -131,7 +129,6 @@ Use empty strings for missing values. Do not include any extra text. Return ONLY
     
 
     const text = await callGeminiWithRetry(model, prompt, maxRetries);
-    console.log("Gemini Image response:", text);
 
     const jsonMatch = text.match(/\{[\s\S]*?\}/);
     if (jsonMatch) return JSON.parse(jsonMatch[0]);
