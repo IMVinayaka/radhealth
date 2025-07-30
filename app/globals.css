@@ -5,6 +5,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+
   }
   
   body {
@@ -66,13 +67,13 @@
 @media (min-width: 1200px) and (max-width: 1599.98px) {
   /* Your CSS here for xl screens */
   :root {
-    font-size: 70% !important;
+    font-size: 75% !important;
   }
 }
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 900px) and (max-width: 1200px) {
   /* Your CSS here for xl screens */
   :root {
-    font-size: 65% !important;
+    font-size: 70% !important;
   }
 }
