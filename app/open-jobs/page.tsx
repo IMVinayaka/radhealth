@@ -322,8 +322,8 @@ export default function CareersPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <section className="py-6 ">
-            <div className="container mx-auto px-4">
+          <section className="py-6">
+            <div className="container mx-auto px-4">install
               <div className="container mx-auto">
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-900">
@@ -444,7 +444,7 @@ export default function CareersPage() {
                                   JSON.stringify(selectedJob)
                                 )
                                 window.open(
-                                  `/open-jobs/${selectedJob.JobID}?data=${jobData}`,
+                                  `/open-jobs/details?data=${jobData}`,
                                   '_blank'
                                 )
                               }}

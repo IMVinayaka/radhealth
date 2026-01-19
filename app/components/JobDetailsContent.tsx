@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { XCircleIcon } from '@heroicons/react/24/outline'
-import ResumeParserPage from '../../resume-parser/page'
-import { useParams, useSearchParams } from 'next/navigation'
+import ResumeParserPage from '../resume-parser/page'
 
-// Define the Job interface
 interface Job {
   JobID: number
   JobTitle: string
@@ -18,8 +17,7 @@ interface Job {
   State: string
 }
 
-const JobDetailsPage = () => {
-  const { jobId } = useParams()
+export default function JobDetailsContent() {
   const searchParams = useSearchParams()
   const [job, setJob] = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
@@ -62,7 +60,6 @@ const JobDetailsPage = () => {
           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white flex flex-col">
               <h2 className="text-2xl font-bold">{job.JobTitle}</h2>
-
               <p className="mt-1 text-primary-extraLight">{job.location}</p>
             </div>
 
@@ -117,5 +114,3 @@ const JobDetailsPage = () => {
     </>
   )
 }
-
-export default JobDetailsPage
