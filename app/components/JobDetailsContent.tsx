@@ -2,38 +2,59 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useJobs } from '../contexts/JobContext'
 import { XCircleIcon } from '@heroicons/react/24/outline'
 import ResumeParserPage from '../resume-parser/page'
-import { Job } from '../services/jobService'
+import { Job, getJobDetails } from '../services/jobService'
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+interface JobWithDescription extends Job {
+  description: string;
+}
 
 
 export default function JobDetailsContent() {
   const searchParams = useSearchParams()
-  const { jobs } = useJobs()
-  const [job, setJob] = useState<Job | null>(null)
+  const [job, setJob] = useState<JobWithDescription | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const jobId = searchParams.get('jobId')
-    if (jobId && jobs.length > 0) {
-      const selectedJob = jobs.find((j) => j.JobID.toString() === jobId)
-      if (selectedJob) {
-        setJob(selectedJob)
+  const jobId = searchParams.get('jobId')
+  if (jobId) {
+    const fetchDetails = async () => {
+      setLoading(true)
+      const details = await getJobDetails(jobId)
+      if (details) {
+        // Create a new object with the description property
+        const jobWithDescription = {
+          ...details,
+          description: (details.JobDescription || 'No description available').replace(/@@Paycomp/g, details.Salary || 'Competitive'),
+        }
+        setJob(jobWithDescription) // Use the new object
       } else {
         setError('Job not found.')
       }
       setLoading(false)
-    } else if (jobs.length === 0) {
-      // Handle case where jobs are not yet loaded
-      setLoading(true)
-    } else {
-      setError('No job ID provided.')
-      setLoading(false)
     }
-  }, [searchParams, jobs])
+    fetchDetails()
+  } else {
+    setError('No job ID provided.')
+    setLoading(false)
+  }
+}, [searchParams])
 
   if (loading) {
     return <div className="p-6">Loading...</div>
@@ -68,19 +89,23 @@ export default function JobDetailsContent() {
                 <div>
                   <p className="text-sm text-gray-500">Posted</p>
                   <p className="font-medium">
-                    {new Date(job.JobPosted).toLocaleDateString()}
+                    {formatDate(job.JobPosted)}
                   </p>
                 </div>
               </div>
               <div className="mb-6">
-                <h3 className="text-lg font-bold mb-3">Job Description</h3>
-                <div
-                  className="text-gray-700 prose max-w-none"
-                  dangerouslySetInnerHTML={{
-                    __html: job.JobDescription || 'No description available',
-                  }}
-                />
-              </div>
+                <h3 className="text-lg font-bold mb-3">
+                              Job Description
+                            </h3>
+                            <div
+                              className="text-gray-700 prose max-w-none"
+                              dangerouslySetInnerHTML={{
+                                __html: job.description, // Use the 'description' property
+                              }}
+                            />
+                          </div>
+
+              
 
               <div className="space-y-4 mt-6">
                 <button

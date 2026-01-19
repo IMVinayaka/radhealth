@@ -12,6 +12,7 @@ export interface Job {
   State?: string;
 }
 
+
 interface SubmitApplicationResponse {
   success: boolean;
   message: string;

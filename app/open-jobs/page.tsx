@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { searchJobs, Job } from '../services/jobService'
-import { useJobs } from '../contexts/JobContext'
 import AutoScrollSections from '../components/AutoScrollSections'
 import { getStatesByCountry } from '../services/commonServices'
 import ResumeParserPage from '../resume-parser/page'
@@ -27,8 +26,7 @@ export default function CareersPage() {
   const [location, setLocation] = useState('')
   const [selectedJob, setSelectedJob] = useState<MockJob | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { setJobs } = useJobs()
-  const [jobsState, setJobsState] = useState<Job[]>([])
+  const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(false)
   const [initialLoad, setInitialLoad] = useState(true)
   const [searchPerformed, setSearchPerformed] = useState(false)
@@ -124,14 +122,14 @@ export default function CareersPage() {
   }, [selectedPeriod])
 
   // Convert API jobs to mock job format
-  const mockJobs: MockJob[] = jobsState.map((job, index) => ({
+  const mockJobs: MockJob[] = jobs.map((job, index) => ({
     JobID: Number(job.JobID), // Convert string to number
     JobTitle: job.JobTitle,
     JobPosted: job.JobPosted,
     jobId: job.JobID, // This can remain as string if needed
     location: `${job.City}, ${job.State}`,
     salary: job.Salary,
-    description:
+     description:
       job.JobDescription ||
       'Job description not available. Please apply for more details.',
     Zip: job.Zip,
@@ -146,7 +144,6 @@ export default function CareersPage() {
         setLoading(true)
         const data = await searchJobs('', '', '', '', 'All', from, to)
         setJobs(data)
-        setJobsState(data)
       } catch (err) {
         console.error('Error fetching initial jobs:', err)
       } finally {
@@ -173,7 +170,6 @@ export default function CareersPage() {
         to
       )
       setJobs(data)
-      setJobsState(data)
     } catch (err) {
       console.error('Error searching jobs:', err)
     } finally {
@@ -327,7 +323,7 @@ export default function CareersPage() {
           </div>
         ) : (
           <section className="py-6">
-            <div className="container mx-auto px-4">install
+            <div className="container mx-auto px-4">
               <div className="container mx-auto">
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-900">
