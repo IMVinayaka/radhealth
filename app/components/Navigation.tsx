@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import Image from 'next/image';
-import Logo from '../assets/images/rad-health-logo-v1.png';
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
+import Logo from '../assets/images/rad-health-logo-v1.png'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -14,42 +14,50 @@ const navigation = [
   { name: 'Services', href: '/solutions' },
   { name: 'Clients', href: '/clients' },
   { name: 'Careers', href: '/open-jobs' },
-];
+]
 
 export default function Navigation() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
-  };
+    setIsMenuOpen(!isMenuOpen)
+    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden'
+  }
 
   const isActive = (href: string) => {
     if (href === '/') {
-      return pathname === '/';
+      return pathname === '/'
     }
-    return pathname.includes(href);
-  };
+    return pathname.includes(href)
+  }
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white/80 backdrop-blur-md'
+    <header
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white/80 backdrop-blur-md shadow-sm'
+          : 'bg-white/80 backdrop-blur-md'
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-extrabold text-primary">
-          <Image className='bg-transparent' src={Logo} alt="Logo" width={150} height={10} />
+          <Image
+            className="bg-transparent"
+            src={Logo}
+            alt="Logo"
+            width={150}
+            height={10}
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -59,20 +67,20 @@ export default function Navigation() {
               key={item.name}
               href={item.href}
               className={`relative px-1 py-2 text-sm font-medium transition-colors ${
-                isActive(item.href) 
-                  ? 'text-primary' 
+                isActive(item.href)
+                  ? 'text-primary'
                   : 'text-gray-700 hover:text-primary'
               }`}
             >
               {item.name}
               {isActive(item.href) && (
-                <motion.span 
+                <motion.span
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
                   layoutId="activeNav"
                   transition={{
                     type: 'spring',
                     stiffness: 300,
-                    damping: 30
+                    damping: 30,
                   }}
                 />
               )}
@@ -130,5 +138,5 @@ export default function Navigation() {
         )}
       </AnimatePresence>
     </header>
-  );
+  )
 }
