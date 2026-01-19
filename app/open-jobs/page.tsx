@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { searchJobs, Job } from '../services/jobService'
+import { useJobs } from '../contexts/JobContext'
 import AutoScrollSections from '../components/AutoScrollSections'
 import { getStatesByCountry } from '../services/commonServices'
 import ResumeParserPage from '../resume-parser/page'
@@ -26,7 +27,8 @@ export default function CareersPage() {
   const [location, setLocation] = useState('')
   const [selectedJob, setSelectedJob] = useState<MockJob | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [jobs, setJobs] = useState<Job[]>([])
+  const { setJobs } = useJobs()
+  const [jobsState, setJobsState] = useState<Job[]>([])
   const [loading, setLoading] = useState(false)
   const [initialLoad, setInitialLoad] = useState(true)
   const [searchPerformed, setSearchPerformed] = useState(false)
@@ -122,7 +124,7 @@ export default function CareersPage() {
   }, [selectedPeriod])
 
   // Convert API jobs to mock job format
-  const mockJobs: MockJob[] = jobs.map((job, index) => ({
+  const mockJobs: MockJob[] = jobsState.map((job, index) => ({
     JobID: Number(job.JobID), // Convert string to number
     JobTitle: job.JobTitle,
     JobPosted: job.JobPosted,
@@ -144,6 +146,7 @@ export default function CareersPage() {
         setLoading(true)
         const data = await searchJobs('', '', '', '', 'All', from, to)
         setJobs(data)
+        setJobsState(data)
       } catch (err) {
         console.error('Error fetching initial jobs:', err)
       } finally {
@@ -170,6 +173,7 @@ export default function CareersPage() {
         to
       )
       setJobs(data)
+      setJobsState(data)
     } catch (err) {
       console.error('Error searching jobs:', err)
     } finally {
@@ -440,11 +444,8 @@ export default function CareersPage() {
                             <ArrowsPointingOutIcon
                               className="h-6 w-6 cursor-pointer text-primary hover:text-gray-700 transition"
                               onClick={() => {
-                                const jobData = encodeURIComponent(
-                                  JSON.stringify(selectedJob)
-                                )
                                 window.open(
-                                  `/open-jobs/details?data=${jobData}`,
+                                  `/open-jobs/details?jobId=${selectedJob.JobID}`,
                                   '_blank'
                                 )
                               }}

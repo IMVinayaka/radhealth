@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
-import LayoutWrapper from './components/LayoutWrapper'
+import LayoutWrapper from './components/LayoutWrapper';
+import { JobProvider } from './contexts/JobContext';
 import { Toaster } from 'react-hot-toast'
 
 const poppins = Poppins({
@@ -27,11 +28,13 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-gradient-to-br from-primary-light to-primary-extraLight bg-fixed">
         <Toaster />
-        <LayoutWrapper>
-          <div className="min-h-screen snap-y snap-mandatory overflow-y-auto">
-            {children}
-          </div>
-        </LayoutWrapper>
+        <JobProvider>
+          <LayoutWrapper>
+            <div className="min-h-screen snap-y snap-mandatory overflow-y-auto">
+              {children}
+            </div>
+          </LayoutWrapper>
+        </JobProvider>
       </body>
     </html>
   )

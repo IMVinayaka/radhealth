@@ -2,44 +2,38 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useJobs } from '../contexts/JobContext'
 import { XCircleIcon } from '@heroicons/react/24/outline'
 import ResumeParserPage from '../resume-parser/page'
+import { Job } from '../services/jobService'
 
-interface Job {
-  JobID: number
-  JobTitle: string
-  location: string
-  description: string
-  salary: string
-  JobPosted: string
-  Zip: string
-  City: string
-  State: string
-}
 
 export default function JobDetailsContent() {
   const searchParams = useSearchParams()
+  const { jobs } = useJobs()
   const [job, setJob] = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const data = searchParams.get('data')
-    if (data) {
-      try {
-        const jobData = JSON.parse(decodeURIComponent(data))
-        setJob(jobData)
-      } catch (e) {
-        setError('Failed to parse job data.')
-      } finally {
-        setLoading(false)
+    const jobId = searchParams.get('jobId')
+    if (jobId && jobs.length > 0) {
+      const selectedJob = jobs.find((j) => j.JobID.toString() === jobId)
+      if (selectedJob) {
+        setJob(selectedJob)
+      } else {
+        setError('Job not found.')
       }
+      setLoading(false)
+    } else if (jobs.length === 0) {
+      // Handle case where jobs are not yet loaded
+      setLoading(true)
     } else {
-      setError('No job data provided.')
+      setError('No job ID provided.')
       setLoading(false)
     }
-  }, [searchParams])
+  }, [searchParams, jobs])
 
   if (loading) {
     return <div className="p-6">Loading...</div>
@@ -60,15 +54,15 @@ export default function JobDetailsContent() {
           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white flex flex-col">
               <h2 className="text-2xl font-bold">{job.JobTitle}</h2>
-              <p className="mt-1 text-primary-extraLight">{job.location}</p>
+              <p className="mt-1 text-primary-extraLight">{`${job.City}, ${job.State}`}</p>
             </div>
 
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                {job.salary && (
+                {job.Salary && (
                   <div>
                     <p className="text-sm text-gray-500">Salary</p>
-                    <p className="font-medium">{job.salary}</p>
+                    <p className="font-medium">{job.Salary}</p>
                   </div>
                 )}
                 <div>
@@ -83,7 +77,7 @@ export default function JobDetailsContent() {
                 <div
                   className="text-gray-700 prose max-w-none"
                   dangerouslySetInnerHTML={{
-                    __html: job.description || 'No description available',
+                    __html: job.JobDescription || 'No description available',
                   }}
                 />
               </div>
