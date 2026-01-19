@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { XCircleIcon } from '@heroicons/react/24/outline'
 import ResumeParserPage from '../../resume-parser/page'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 
 // Define the Job interface
 interface Job {
@@ -20,38 +20,28 @@ interface Job {
 
 const JobDetailsPage = () => {
   const { jobId } = useParams()
+  const searchParams = useSearchParams()
   const [job, setJob] = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    if (jobId) {
-      // In a real application, you would fetch the job details from an API
-      // For now, we'll use a placeholder and you can replace it with actual data fetching
-      const fetchJobDetails = async () => {
-        try {
-          // This is where you would fetch job data by ID
-          // For demonstration, we'll use a timeout to simulate a network request
-          setTimeout(() => {
-            const jobs: Job[] = JSON.parse(localStorage.getItem('jobs') || '[]')
-            const selectedJob = jobs.find((j) => j.JobID.toString() === jobId)
-            if (selectedJob) {
-              setJob(selectedJob)
-            } else {
-              setError('Job not found')
-            }
-            setLoading(false)
-          }, 1000)
-        } catch (err) {
-          setError('Failed to fetch job details')
-          setLoading(false)
-        }
+    const data = searchParams.get('data')
+    if (data) {
+      try {
+        const jobData = JSON.parse(decodeURIComponent(data))
+        setJob(jobData)
+      } catch (e) {
+        setError('Failed to parse job data.')
+      } finally {
+        setLoading(false)
       }
-
-      fetchJobDetails()
+    } else {
+      setError('No job data provided.')
+      setLoading(false)
     }
-  }, [jobId])
+  }, [searchParams])
 
   if (loading) {
     return <div className="p-6">Loading...</div>

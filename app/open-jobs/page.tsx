@@ -440,16 +440,13 @@ export default function CareersPage() {
                             <ArrowsPointingOutIcon
                               className="h-6 w-6 cursor-pointer text-primary hover:text-gray-700 transition"
                               onClick={() => {
-                                if (selectedJob) {
-                                  localStorage.setItem(
-                                    'jobs',
-                                    JSON.stringify(mockJobs)
-                                  )
-                                  window.open(
-                                    `/open-jobs/${selectedJob.JobID}`,
-                                    '_blank'
-                                  )
-                                }
+                                const jobData = encodeURIComponent(
+                                  JSON.stringify(selectedJob)
+                                )
+                                window.open(
+                                  `/open-jobs/${selectedJob.JobID}?data=${jobData}`,
+                                  '_blank'
+                                )
                               }}
                             />
 
