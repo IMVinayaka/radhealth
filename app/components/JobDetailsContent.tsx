@@ -6,19 +6,6 @@ import { XCircleIcon } from '@heroicons/react/24/outline'
 import ResumeParserPage from '../resume-parser/page'
 import { Job, getJobDetails } from '../services/jobService'
 
-const formatDate = (dateString: string) => {
-  if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return 'Invalid Date';
-  }
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
-
 interface JobWithDescription extends Job {
   description: string;
 }
@@ -41,7 +28,7 @@ export default function JobDetailsContent() {
         // Create a new object with the description property
         const jobWithDescription = {
           ...details,
-          description: (details.JobDescription || 'No description available').replace(/@@Paycomp/g, details.Salary || 'Competitive'),
+          description: details.JobDescription || 'No description available',
         }
         setJob(jobWithDescription) // Use the new object
       } else {
@@ -89,7 +76,7 @@ export default function JobDetailsContent() {
                 <div>
                   <p className="text-sm text-gray-500">Posted</p>
                   <p className="font-medium">
-                    {formatDate(job.JobPosted)}
+                    {new Date(job.JobPosted).toLocaleDateString()}
                   </p>
                 </div>
               </div>

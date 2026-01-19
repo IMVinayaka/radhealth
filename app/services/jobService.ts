@@ -10,6 +10,7 @@ export interface Job {
   Zip?: string;
   City?: string;
   State?: string;
+  location?: string;
 }
 
 
